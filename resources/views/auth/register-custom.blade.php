@@ -15,17 +15,16 @@
 </head>
 <body class="min-h-screen bg-[#0b1120] text-white flex flex-col justify-center items-center p-4">
 
-    <!-- Teks 'register' kecil di pojok kiri atas container seperti di gambar -->
+    <!-- Header teks register -->
     <div class="w-full max-w-5xl mb-1 text-sky-500 font-sans text-lg">
         register
     </div>
 
-    <!-- Outer Box dengan Outline Biru persis seperti di screenshot -->
+    <!-- Outer Box dengan Border Biru -->
     <div class="w-full max-w-5xl border-2 border-sky-500 bg-[#0b1120] flex flex-col md:flex-row items-stretch overflow-hidden">
         
-        <!-- Sisi Kiri: Gambar Banner (Mengisi Penuh Sisi Kiri) -->
+        <!-- Sisi Kiri: Banner Poster Hobi -->
         <div class="w-full md:w-[38%] border-b-2 md:border-b-0 md:border-r-2 border-sky-500 flex items-center justify-center bg-[#0b1120]">
-            <!-- Pastikan file gambar ditaruh di: public/images/banner.jpg -->
             <img src="{{ asset('images/banner.jpg') }}" 
                  alt="CircleHub Banner" 
                  class="w-full h-full object-cover">
@@ -34,14 +33,13 @@
         <!-- Sisi Kanan: Form Register -->
         <div class="w-full md:w-[62%] p-8 md:p-12 flex items-center justify-center bg-[#0b1120]">
             
-            <!-- Card Form Gelap -->
             <div class="w-full max-w-md bg-[#232a3b] p-8 md:p-10 rounded-2xl shadow-2xl">
                 
                 <h2 class="text-2xl md:text-3xl font-bold text-center text-white mb-8">
                     Selamat Datang di CircleHub
                 </h2>
 
-                <!-- Menampilkan Pesan Error Validasi Laravel jika Ada -->
+                <!-- Display Errors jika ada -->
                 @if ($errors->any())
                     <div class="mb-6 p-3 bg-red-500/10 border border-red-500/40 rounded-lg text-red-400 text-xs">
                         <ul class="list-disc list-inside space-y-1">
@@ -55,13 +53,13 @@
                 <form method="POST" action="{{ route('register') }}" class="space-y-4">
                     @csrf
 
-                    <!-- Input Username -->
+                    <!-- Input Username (Mengirimkan atribut 'username' dan 'name' agar sinkron sempurna) -->
                     <div>
-                        <label for="name" class="block text-sm font-medium text-slate-200 mb-1">Username</label>
+                        <label for="username" class="block text-sm font-medium text-slate-200 mb-1">Username</label>
                         <input type="text" 
-                               id="name" 
-                               name="name" 
-                               value="{{ old('name') }}"
+                               id="username" 
+                               name="username" 
+                               value="{{ old('username') ?? old('name') }}"
                                class="w-full px-4 py-3 bg-[#414b5e] border border-transparent rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                                required 
                                autofocus>
@@ -98,7 +96,7 @@
                                required>
                     </div>
 
-                    <!-- Tombol Submit (Capsule Purple Button) -->
+                    <!-- Tombol Submit Purple CircleHub -->
                     <div class="pt-6 flex justify-center">
                         <button type="submit" 
                                 class="w-1/2 min-w-[150px] py-3 bg-[#6C5CE7] hover:bg-[#5b4bc4] text-white font-semibold rounded-full shadow-lg shadow-[#6C5CE7]/30 transition duration-200 text-center cursor-pointer">
