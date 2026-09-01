@@ -34,7 +34,8 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
+                        <!-- Profile link diubah ke '#' agar tidak error jika route profile belum dibuat -->
+                        <x-dropdown-link :href="'#'">
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
@@ -80,7 +81,8 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
+                <!-- Profile link diubah ke '#' agar tidak error jika route profile belum dibuat -->
+                <x-responsive-nav-link :href="'#'">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
 
