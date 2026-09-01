@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,7 +29,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Mendukung penamaan 'username' maupun 'name' dari form
+        // Validasi input dari form
         $request->validate([
             'username' => ['nullable', 'string', 'max:255'],
             'name'     => ['nullable', 'string', 'max:255'],
@@ -38,15 +37,14 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Mengambil input username (apapun nama atributnya di form)
+        // Mengambil nilai username/name
         $usernameInput = $request->input('username') ?? $request->input('name');
 
-        // Jika user tidak mengisi username sama sekali
         if (empty($usernameInput)) {
             return back()->withErrors(['username' => 'The username field is required.'])->withInput();
         }
 
-        // Menyimpan data ke database
+        // Simpan data user ke database
         $user = User::create([
             'name'     => $usernameInput,
             'email'    => $request->email,
@@ -57,6 +55,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        // Langsung redirect ke path '/dashboard' tanpa RouteServiceProvider
+        return redirect('/dashboard');
     }
 }

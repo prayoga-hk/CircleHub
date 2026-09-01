@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,19 +15,37 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('auth.login-custom');
     }
 
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $request->authenticate();
+        $request->validate([
+            'login'    => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ]);
 
-        $request->session()->regenerate();
+        // Cek login via email atau username (name)
+        $loginType = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $credentials = [
+            $loginType => $request->input('login'),
+            'password' => $request->input('password'),
+        ];
+
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();
+
+            // Redirect langsung ke /dashboard
+            return redirect('/dashboard');
+        }
+
+        return back()->withErrors([
+            'login' => 'Username atau Password yang kamu masukkan salah.',
+        ])->onlyInput('login');
     }
 
     /**

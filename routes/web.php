@@ -1,16 +1,31 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Route;
 
-// Route Tampilan & Proses Register
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+Route::get('/', function () {
+    return view('welcome');
+});
 
-// Dummy Route untuk Login dan Dashboard
-Route::get('/login', function () { return "Halaman Login"; })->name('login');
-Route::get('/dashboard', function () { return "Selamat Datang di Dashboard CircleHub!"; })->name('dashboard')->middleware('auth');
+Route::get('/dashboard', function () {
+    return 'Selamat Datang di Dashboard CircleHub!';
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+use Illuminate\Support\Facades\Auth;
+
+Route::get('/force-logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/login');
+});
 
 
-// Override route register bawaan Breeze
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+Route::get('/logout-custom', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/login');
+});
+
+// PASTIKAN BARIS INI ADA DI PALING BAWAH
+require __DIR__.'/auth.php';
