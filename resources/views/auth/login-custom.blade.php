@@ -4,90 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - CircleHub</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             background-color: #0b1120;
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
     </style>
 </head>
-<body class="min-h-screen bg-[#0b1120] text-white flex flex-col justify-center items-center p-4">
+<body class="h-screen w-screen bg-[#0b1120] text-white overflow-hidden m-0 p-0 flex items-center justify-center">
 
-    <!-- Header Teks Login -->
-    <div class="w-full max-w-5xl mb-1 text-slate-400 font-sans text-lg">
-        Login
-    </div>
-
-    <!-- Outer Box dengan Border Biru -->
-    <div class="w-full max-w-5xl border-2 border-sky-500 bg-[#0b1120] flex flex-col md:flex-row items-stretch overflow-hidden">
+    <!-- Blok Gabungan (Gambar + Form) Otomatis di Tengah Layar -->
+    <div class="flex flex-col md:flex-row items-center justify-center gap-6 lg:gap-8 p-4 max-w-7xl mx-auto">
         
-        <!-- Sisi Kiri: Banner Poster Hobi -->
-        <div class="w-full md:w-[38%] border-b-2 md:border-b-0 md:border-r-2 border-sky-500 flex items-center justify-center bg-[#0b1120]">
+        <!-- Gambar (Sisi Kiri, nempel berdekatan) -->
+        <div class="hidden md:block w-auto flex-shrink-0">
             <img src="{{ asset('images/banner.jpg') }}" 
                  alt="CircleHub Banner" 
-                 class="w-full h-full object-cover">
+                 class="h-[75vh] max-h-[600px] w-auto object-contain rounded-2xl shadow-2xl animate-float">
         </div>
 
-        <!-- Sisi Kanan: Form Login -->
-        <div class="w-full md:w-[62%] p-8 md:p-12 flex items-center justify-center bg-[#0b1120]">
-            
-            <div class="w-full max-w-md bg-[#232a3b] p-8 md:p-10 rounded-2xl shadow-2xl">
+        <!-- Form Login (Sisi Kanan, nempel berdekatan) -->
+        <div class="w-full max-w-md flex-shrink-0">
+            <div class="w-full bg-[#161f33] p-8 rounded-2xl border border-slate-800 shadow-xl">
                 
-                <h2 class="text-2xl md:text-3xl font-bold text-center text-white mb-8">
-                    Selamat Datang Kembali
-                </h2>
+                <div class="text-center mb-6">
+                    <h1 class="text-2xl font-bold text-white tracking-wide mb-1">
+                        Selamat Datang Kembali
+                    </h1>
+                    <p class="text-xs text-slate-400">Masuk ke akun <span class="text-sky-400 font-semibold">CircleHub</span> kamu</p>
+                </div>
 
-                <!-- Display Errors jika login gagal -->
-                @if ($errors->any())
-                    <div class="mb-6 p-3 bg-red-500/10 border border-red-500/40 rounded-lg text-red-400 text-xs">
-                        <ul class="list-disc list-inside space-y-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+                <x-auth-session-status class="mb-4" :status="session('status')" />
 
-                <!-- Form Login -->
-                <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                <form method="POST" action="{{ route('login') }}" class="space-y-4">
                     @csrf
 
-                    <!-- Input Username -->
                     <div>
-                        <label for="login" class="block text-sm font-medium text-slate-200 mb-2">Username</label>
-                        <input type="text" 
-                               id="login" 
-                               name="login" 
-                               value="{{ old('login') }}"
-                               class="w-full px-4 py-3 bg-[#414b5e] border border-transparent rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                               required 
-                               autofocus>
+                        <label for="email" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Email</label>
+                        <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus placeholder="nama@email.com"
+                            class="w-full px-4 py-3 bg-[#0b1120] text-white rounded-xl border border-slate-700/70 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 font-medium text-sm transition">
+                        <x-input-error :messages="$errors->get('email')" class="mt-1 text-red-400 text-xs" />
                     </div>
 
-                    <!-- Input Password -->
                     <div>
-                        <label for="password" class="block text-sm font-medium text-slate-200 mb-2">Password</label>
-                        <input type="password" 
-                               id="password" 
-                               name="password" 
-                               class="w-full px-4 py-3 bg-[#414b5e] border border-transparent rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                               required>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="password" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Password</label>
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}" class="text-xs text-sky-400 hover:underline">Lupa password?</a>
+                            @endif
+                        </div>
+                        <input id="password" type="password" name="password" required placeholder="••••••••"
+                            class="w-full px-4 py-3 bg-[#0b1120] text-white rounded-xl border border-slate-700/70 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 font-medium text-sm transition">
+                        <x-input-error :messages="$errors->get('password')" class="mt-1 text-red-400 text-xs" />
                     </div>
 
-                    <!-- Tombol Masuk Purple CircleHub -->
-                    <div class="pt-4 flex justify-center">
+                    <div class="flex items-center justify-between">
+                        <label for="remember_me" class="inline-flex items-center cursor-pointer">
+                            <input id="remember_me" type="checkbox" class="rounded bg-[#0b1120] border-slate-700 text-sky-500 shadow-sm focus:ring-sky-500" name="remember">
+                            <span class="ms-2 text-xs text-slate-400">Ingat saya</span>
+                        </label>
+                    </div>
+
+                    <div class="pt-2">
                         <button type="submit" 
-                                class="w-1/2 min-w-[140px] py-3 bg-[#6C5CE7] hover:bg-[#5b4bc4] text-white font-semibold rounded-full shadow-lg shadow-[#6C5CE7]/30 transition duration-200 text-center cursor-pointer">
+                            class="w-full py-3.5 bg-sky-500 hover:bg-sky-600 text-white font-semibold rounded-xl transition duration-200 shadow-md shadow-sky-500/20 active:scale-[0.99]">
                             Masuk
                         </button>
                     </div>
 
+                    <p class="text-center text-xs text-slate-400 pt-2">
+                        Belum punya akun? 
+                        <a href="{{ route('register') }}" class="text-sky-400 font-semibold hover:underline">Daftar di sini</a>
+                    </p>
                 </form>
 
             </div>
-
         </div>
 
     </div>
