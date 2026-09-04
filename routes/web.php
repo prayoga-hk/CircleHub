@@ -1,34 +1,25 @@
 <?php
 
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\StatisticController;
->>>>>>> 5f9be34 (perbaikan menu member dan kategori dan penambahan menu statistik pada dashboard)
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\CategoryController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Route setelah login
-Route::middleware(['auth', 'verified'])->group(function () {
-    
-    // Route Dashboard
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::get('/dashboard', function () {
+    return redirect()->route('admin.users.index');
+})->middleware(['auth'])->name('dashboard');
 
-    // Route CRUD Category
-    Route::resource('categories', CategoryController::class);
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-<<<<<<< HEAD
-require __DIR__.'/auth.php';
-=======
 Route::middleware(['auth'])->prefix('dashboard')->name('admin.')->group(function () {
 
 
@@ -46,4 +37,3 @@ Route::middleware(['auth'])->prefix('dashboard')->name('admin.')->group(function
 });
 
 require __DIR__.'/auth.php';
->>>>>>> 5f9be34 (perbaikan menu member dan kategori dan penambahan menu statistik pada dashboard)

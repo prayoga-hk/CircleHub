@@ -93,24 +93,30 @@
 </div>
 
 <script>
-function toggleDropdown(event, id) {
-    event.stopPropagation();
-
-    const targetDropdown = document.getElementById(id);
-    const isCurrentlyHidden = targetDropdown.classList.contains('hidden');
-
-    closeAllDropdowns();
-
-    if (isCurrentlyHidden) {
-        targetDropdown.classList.remove('hidden');
-    }
-
+    // Fungsi untuk menutup semua dropdown
     function closeAllDropdowns() {
         document.querySelectorAll('.dropdown-menu').forEach(el => {
             el.classList.add('hidden');
         });
     }
 
+    // Fungsi untuk toggle dropdown spesifik
+    function toggleDropdown(event, id) {
+        event.stopPropagation(); // Mencegah event click tembus ke elemen parent
+
+        const targetDropdown = document.getElementById(id);
+        const isCurrentlyHidden = targetDropdown.classList.contains('hidden');
+
+        // Tutup dropdown lain yang sedang terbuka
+        closeAllDropdowns();
+
+        // Jika sebelumnya tersembunyi, tampilkan
+        if (isCurrentlyHidden) {
+            targetDropdown.classList.remove('hidden');
+        }
+    }
+
+    // Jalankan event listener luar saat dokumen telah dimuat
     document.addEventListener('click', function (event) {
         if (!event.target.closest('.dropdown-menu')) {
             closeAllDropdowns();

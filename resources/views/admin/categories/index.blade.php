@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Kategori - CircleHub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#0b1120] text-white font-sans min-h-screen p-6 sm:p-10">
+@extends('layouts.admin')
 
 @section('title', 'Kategori')
 
