@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\StatisticController;
 use Illuminate\Support\Facades\Route;
 
 // ke landing page
@@ -20,16 +21,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// admin panel
-Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('admin.')->group(function () {
+Route::middleware(['auth'])->prefix('dashboard')->name('admin.')->group(function () {
 
-    //manajemen member
+
+    Route::get('/statistik', [StatisticController::class, 'index'])->name('statistics.index');
+
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::patch('/users/{user}/promote', [AdminUserController::class, 'promote'])->name('users.promote');
     Route::patch('/users/{user}/ban', [AdminUserController::class, 'ban'])->name('users.ban');
     Route::patch('/users/{user}/unban', [AdminUserController::class, 'unban'])->name('users.unban');
 
-    //manajemen kategori
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');

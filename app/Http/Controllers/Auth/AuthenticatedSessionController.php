@@ -21,32 +21,37 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'login'    => ['required', 'string'],
-            'password' => ['required', 'string'],
-        ]);
+     public function store(Request $request): RedirectResponse
+     {
+         $request->validate([
+             'login'    => ['required', 'string'],
+             'password' => ['required', 'string'],
+         ]);
 
-        // Cek login via email atau username (name)
-        $loginType = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+         // Cek login via email atau username (name)
+         $loginType = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
 
-        $credentials = [
-            $loginType => $request->input('login'),
-            'password' => $request->input('password'),
-        ];
+         $credentials = [
+             $loginType => $request->input('login'),
+             'password' => $request->input('password'),
+         ];
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
+         if (Auth::attempt($credentials, $request->boolean('remember'))) {
+             $request->session()->regenerate();
 
-            // Redirect langsung ke /dashboard
-            return redirect('/dashboard');
-        }
+             $user = Auth::user();
 
-        return back()->withErrors([
-            'login' => 'Username atau Password yang kamu masukkan salah.',
-        ])->onlyInput('login');
-    }
+             if ($user->role === 'admin') {
+                 return redirect()->route('admin.statistics.index');
+             }
+
+             return redirect('/');
+         }
+
+         return back()->withErrors([
+             'login' => 'Username atau Password yang kamu masukkan salah.',
+         ])->onlyInput('login');
+     }
 
     /**
      * Destroy an authenticated session.

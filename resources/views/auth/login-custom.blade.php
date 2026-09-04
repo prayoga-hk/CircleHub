@@ -25,18 +25,18 @@
 <body class="h-screen w-screen bg-[#0b1120] text-white overflow-hidden m-0 p-0 flex items-center justify-center">
 
     <div class="flex flex-col md:flex-row items-center justify-center gap-6 lg:gap-8 p-4 max-w-7xl mx-auto">
-        
+
         <!-- Gambar Banner -->
         <div class="hidden md:block w-auto flex-shrink-0">
-            <img src="{{ asset('images/banner.jpg') }}" 
-                 alt="CircleHub Banner" 
+            <img src="{{ asset('images/banner.jpg') }}"
+                 alt="CircleHub Banner"
                  class="h-[75vh] max-h-[600px] w-auto object-contain rounded-2xl shadow-2xl animate-float">
         </div>
 
         <!-- Form Login -->
         <div class="w-full max-w-md flex-shrink-0">
             <div class="w-full bg-[#161f33] p-8 rounded-2xl border border-slate-800 shadow-xl">
-                
+
                 <div class="text-center mb-6">
                     <h1 class="text-2xl font-bold text-white tracking-wide mb-1">
                         Selamat Datang Kembali
@@ -50,10 +50,10 @@
                     @csrf
 
                     <div>
-                        <label for="email" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Email</label>
-                        <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus placeholder="nama@email.com"
+                        <label for="login" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Email atau Username</label>
+                        <input id="login" type="text" name="login" value="{{ old('login') }}" required autofocus placeholder="Email atau Username"
                             class="w-full px-4 py-3 bg-[#0b1120] text-white rounded-xl border border-slate-700/70 focus:outline-none focus:border-[#6C5CE7] focus:ring-1 focus:ring-[#6C5CE7] font-medium text-sm transition">
-                        <x-input-error :messages="$errors->get('email')" class="mt-1 text-red-400 text-xs" />
+                        <x-input-error :messages="$errors->get('login')" class="mt-1 text-red-400 text-xs" />
                     </div>
 
                     <div>
@@ -76,14 +76,14 @@
                     </div>
 
                     <div class="pt-2">
-                        <button type="submit" 
-                            class="w-full py-3.5 bg-[#6C5CE7] hover:bg-[#5b4bc4] text-white font-semibold rounded-xl transition duration-200 shadow-md shadow-[#6C5CE7]/20 active:scale-[0.99]">
+                        <button type="submit"
+                            class="w-full py-3.5 bg-[#6C5CE7] hover:bg-[#5b4bc4] text-white font-semibold rounded-xl transition duration-200 shadow-md shadow-[#6C5CE7]/20 active:scale-[0.99] cursor-pointer">
                             Masuk
                         </button>
                     </div>
 
                     <p class="text-center text-xs text-slate-400 pt-2">
-                        Belum punya akun? 
+                        Belum punya akun?
                         <a href="{{ route('register') }}" class="text-[#6C5CE7] font-semibold hover:underline">Daftar di sini</a>
                     </p>
                 </form>
