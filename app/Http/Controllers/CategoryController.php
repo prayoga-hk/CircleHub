@@ -12,14 +12,12 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::latest()->get();
-        // SESUAIKAN JADI admin.categories.index
-        return view('admin.categories.index', compact('categories'));
+        return view('categories.index', compact('categories'));
     }
 
     public function create()
     {
-        // SESUAIKAN JADI admin.categories.create
-        return view('admin.categories.create');
+        return view('categories.create');
     }
 
     public function store(Request $request)
@@ -40,8 +38,7 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        // SESUAIKAN JADI admin.categories.edit
-        return view('admin.categories.edit', compact('category'));
+        return view('categories.edit', compact('category'));
     }
 
     public function update(Request $request, Category $category)
