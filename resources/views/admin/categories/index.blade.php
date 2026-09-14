@@ -12,6 +12,10 @@
         </button>
     </div>
 
+    @if (session('success'))
+        <x-admin.alert>{{ session('success') }}</x-admin.alert>
+    @endif
+
     <div class="bg-[#1D2132] rounded-xl overflow-hidden shadow-2xl border border-slate-800/40">
         <table class="w-full text-left text-sm text-slate-200">
             <thead class="border-b border-slate-700/50 text-slate-300">

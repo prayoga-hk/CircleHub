@@ -10,9 +10,7 @@
     </div>
 
     @if (session('success'))
-        <div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-4 py-3 rounded-lg text-xs">
-            {{ session('success') }}
-        </div>
+        <x-admin.alert>{{ session('success') }}</x-admin.alert>
     @endif
 
     <div class="bg-[#1D2132] rounded-xl overflow-hidden shadow-2xl border border-slate-800/40">
@@ -20,6 +18,7 @@
             <thead class="border-b border-slate-700/50 text-slate-300">
                 <tr>
                     <th class="px-6 py-4 font-normal">Username</th>
+                    <th class="px-6 py-4 font-normal">Email</th>
                     <th class="px-6 py-4 font-normal">Role</th>
                     <th class="px-6 py-4 font-normal text-right">Aksi</th>
                 </tr>
@@ -34,6 +33,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 capitalize">{{ $user->role ?? 'Member' }}</td>
+                        <td class="px-6 py-4">{{ $user->email }}</td>
                         <td class="px-6 py-4 text-right relative">
                             <button
                                 onclick="toggleDropdown(event, 'dropdown-user-{{ $user->id }}')"

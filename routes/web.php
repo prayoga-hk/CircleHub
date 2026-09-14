@@ -1,14 +1,24 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PostController; // <-- Jangan lupa import PostController
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\StatisticController;
 use Illuminate\Support\Facades\Route;
 
+// Halaman Utama / Landing Page
 Route::get('/', function () {
+    // Jika user sudah login, arahkan langsung ke halaman utama forum
+    if (auth()->check()) {
+        return redirect()->route('posts.index');
+    }
+    // Jika belum login, tampilkan landing page
     return view('welcome');
 });
+
+// Rute Halaman Utama Forum (Hanya bisa diakses jika sudah login)
+Route::get('/home', [PostController::class, 'index'])->middleware(['auth'])->name('pages.posts.index');
 
 Route::get('/dashboard', function () {
     return redirect()->route('admin.users.index');
@@ -21,8 +31,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth'])->prefix('dashboard')->name('admin.')->group(function () {
-
-
     Route::get('/statistik', [StatisticController::class, 'index'])->name('statistics.index');
 
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');

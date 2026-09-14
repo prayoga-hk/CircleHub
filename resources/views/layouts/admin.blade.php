@@ -14,25 +14,21 @@
             <h1 class="text-white font-bold text-lg px-2">Dashboard</h1>
 
             <nav class="space-y-2">
-                <a href="{{ route('admin.statistics.index') }}"
-                   class="block px-4 py-2 rounded-lg text-sm transition-colors {{ request()->routeIs('admin.statistics.*') ? 'bg-[#3B3A82] text-white font-medium' : 'bg-[#181D2D] text-slate-300 hover:bg-[#21273A]' }}">
+                <x-admin.sidebar-link :href="route('admin.statistics.index')" :active="request()->routeIs('admin.statistics.*')">
                     Statistik
-                </a>
+                </x-admin.sidebar-link>
 
-                <a href="{{ route('admin.users.index') }}"
-                   class="block px-4 py-2 rounded-lg text-sm transition-colors {{ request()->routeIs('admin.users.*') ? 'bg-[#3B3A82] text-white font-medium' : 'bg-[#181D2D] text-slate-300 hover:bg-[#21273A]' }}">
+                <x-admin.sidebar-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                     Member
-                </a>
+                </x-admin.sidebar-link>
 
-                <a href="#"
-                   class="block px-4 py-2 rounded-lg text-sm transition-colors bg-[#181D2D] text-slate-300 hover:bg-[#21273A]">
+                <x-admin.sidebar-link href="#">
                     Postingan
-                </a>
+                </x-admin.sidebar-link>
 
-                <a href="{{ route('admin.categories.index') }}"
-                   class="block px-4 py-2 rounded-lg text-sm transition-colors {{ request()->routeIs('admin.categories.*') ? 'bg-[#3B3A82] text-white font-medium' : 'bg-[#181D2D] text-slate-300 hover:bg-[#21273A]' }}">
+                <x-admin.sidebar-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
                     Kategori
-                </a>
+                </x-admin.sidebar-link>
             </nav>
         </div>
 
