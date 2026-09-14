@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     // Jika user sudah login, arahkan langsung ke halaman utama forum
     if (auth()->check()) {
-        return redirect()->route('posts.index');
+        return redirect()->route('pages.posts.index');
     }
     // Jika belum login, tampilkan landing page
     return view('welcome');
