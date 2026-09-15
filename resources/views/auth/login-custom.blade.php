@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - CircleHub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script
     <style>
         body {
             background-color: #0b1120;
@@ -26,14 +26,12 @@
 
     <div class="flex flex-col md:flex-row items-center justify-center gap-6 lg:gap-8 p-4 max-w-7xl mx-auto">
 
-        <!-- Gambar Banner -->
         <div class="hidden md:block w-auto flex-shrink-0">
             <img src="{{ asset('images/banner.jpg') }}"
                  alt="CircleHub Banner"
                  class="h-[75vh] max-h-[600px] w-auto object-contain rounded-2xl shadow-2xl animate-float">
         </div>
 
-        <!-- Form Login -->
         <div class="w-full max-w-md flex-shrink-0">
             <div class="w-full bg-[#161f33] p-8 rounded-2xl border border-slate-800 shadow-xl">
 
