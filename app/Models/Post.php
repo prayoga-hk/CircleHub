@@ -2,30 +2,35 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
     use HasFactory;
 
-        protected $fillable = [
-            'user_id',
-            'category_id',
-            'title',
-            'content',
-            'image',
-        ];
+    protected $fillable = [
+        'user_id',
+        'category_id',
+        'title',
+        'slug',
+        'content',
+        'image',
+    ];
 
-        // Relasi: Post dimiliki oleh satu User
-        public function user()
-        {
-            return $this->belongsTo(User::class);
-        }
+    /**
+     * Relasi: Post milik satu User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-        // Relasi: Post masuk ke dalam satu Category
-        public function category()
-        {
-            return $this->belongsTo(Category::class);
-        }
+    /**
+     * Relasi: Post milik satu Category
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
