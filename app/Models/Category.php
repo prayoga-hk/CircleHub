@@ -16,4 +16,12 @@ class Category extends Model
         'slug',
         'description',
     ];
+
+    /**
+     * Relasi: Satu Category punya banyak Post
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 }
