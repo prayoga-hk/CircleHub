@@ -6,6 +6,9 @@
     <title>CircleHub - Profile</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
 </head>
 <body class="bg-[#121316] text-slate-200 flex min-h-screen font-sans antialiased" x-data="{ openProfileModal: false, openPasswordModal: false, openDeleteModal: false }">
 
@@ -27,7 +30,7 @@
             </div>
         @endif
 
-        <!-- Pesan Error Validasi global jika ada -->
+        <!-- Pesan Error Validasi global -->
         @if ($errors->any())
             <div class="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl text-sm space-y-1">
                 @foreach ($errors->all() as $error)
@@ -38,7 +41,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl">
             
-            <!-- Card Utama (Kiri: Foto, Username, Email, Bio, Password) -->
+            <!-- Card Utama -->
             <div class="lg:col-span-2 bg-[#2B2D31] rounded-2xl p-6 shadow-xl space-y-6 border border-slate-700/40">
                 
                 <!-- Avatar Circle -->
@@ -47,7 +50,7 @@
                         {{ strtoupper(substr($user->name, 0, 1)) }}
                     </div>
                     <button type="button" @click="openProfileModal = true" class="text-slate-400 hover:text-white transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 210.3H3v-3.572L16.732 3.732z"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.03H3v-3.572L16.732 3.732z"></path></svg>
                     </button>
                 </div>
 
@@ -58,7 +61,7 @@
                         <p class="text-base text-white font-medium mt-0.5">{{ $user->name }}</p>
                     </div>
                     <button type="button" @click="openProfileModal = true" class="text-slate-400 hover:text-white transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 210.3H3v-3.572L16.732 3.732z"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.03H3v-3.572L16.732 3.732z"></path></svg>
                     </button>
                 </div>
 
@@ -69,7 +72,7 @@
                         <p class="text-base text-white font-medium mt-0.5">{{ $user->email }}</p>
                     </div>
                     <button type="button" @click="openProfileModal = true" class="text-slate-400 hover:text-white transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 210.3H3v-3.572L16.732 3.732z"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.03H3v-3.572L16.732 3.732z"></path></svg>
                     </button>
                 </div>
 
@@ -80,7 +83,7 @@
                         <p class="text-base text-white font-medium mt-0.5">{{ $user->bio ?? 'Gaming sleep repeat everyday' }}</p>
                     </div>
                     <button type="button" @click="openProfileModal = true" class="text-slate-400 hover:text-white transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 210.3H3v-3.572L16.732 3.732z"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.03H3v-3.572L16.732 3.732z"></path></svg>
                     </button>
                 </div>
 
@@ -91,13 +94,13 @@
                         <p class="text-base text-white font-medium mt-0.5">********</p>
                     </div>
                     <button type="button" @click="openPasswordModal = true" class="text-slate-400 hover:text-white transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 210.3H3v-3.572L16.732 3.732z"></path></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.03H3v-3.572L16.732 3.732z"></path></svg>
                     </button>
                 </div>
 
             </div>
 
-            <!-- Card Kanan (Samping: ID, Role, Join Date, Danger Zone) -->
+            <!-- Card Kanan -->
             <div class="space-y-6">
                 
                 <!-- Info Tambahan -->
@@ -116,7 +119,7 @@
                     </div>
                 </div>
 
-                <!-- Danger Zone (Hapus Akun) -->
+                <!-- Danger Zone -->
                 <div class="bg-[#2B2D31] rounded-2xl p-6 shadow-xl space-y-4 border border-slate-700/40">
                     <p class="text-sm font-semibold text-slate-200">Danger Zone</p>
                     <button type="button" @click="openDeleteModal = true" class="w-full py-2.5 px-4 bg-[#7A2B2B] hover:bg-red-700 text-white font-medium rounded-xl text-sm transition shadow-lg cursor-pointer text-center">
