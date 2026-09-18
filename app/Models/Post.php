@@ -9,17 +9,26 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'category_id',
-        'title',
-        'slug',
-        'content',
-        'image',
-    ];
+    protected $guarded = [];
 
     /**
-     * Relasi: Post milik satu User
+     * Relasi ke model Comment (Satu Post memiliki banyak Komentar)
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Relasi ke model Like
+     */
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    /**
+     * Relasi ke User pembuat post
      */
     public function user()
     {
@@ -27,7 +36,7 @@ class Post extends Model
     }
 
     /**
-     * Relasi: Post milik satu Category
+     * Relasi ke Category
      */
     public function category()
     {

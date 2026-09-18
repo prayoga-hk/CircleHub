@@ -9,16 +9,10 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $table = 'categories';
-
-    protected $fillable = [
-        'name',
-        'slug',
-        'description',
-    ];
+    protected $guarded = [];
 
     /**
-     * Relasi: Satu Category punya banyak Post
+     * Satu Kategori memiliki banyak Post
      */
     public function posts()
     {

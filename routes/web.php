@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\StatisticController;
@@ -33,10 +34,17 @@ Route::middleware(['auth'])->group(function () {
         return redirect()->route('admin.users.index');
     })->name('dashboard');
 
-    // Posts
+    // Posts (Postingan)
     Route::get('/home', [PostController::class, 'index'])->name('pages.posts.index');
     Route::get('/posts/create', [PostController::class, 'create'])->name('pages.posts.create');
     Route::post('/posts', [PostController::class, 'store'])->name('pages.posts.store');
+    
+    // Fitur Detail/Komentar & Like Postingan
+    Route::get('/posts/{post}', [PostController::class, 'show'])->name('pages.posts.show');
+    Route::post('/posts/{post}/like', [PostController::class, 'toggleLike'])->name('posts.like');
+    
+    // Fitur Simpan Komentar (Baru Ditambahkan)
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
