@@ -30,7 +30,7 @@
             {{-- Tombol Toggle Dark / Light Mode --}}
             <button id="theme-toggle" type="button" class="fixed top-20 right-8 z-50 p-3 rounded-full bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 shadow-md hover:scale-105 transition-all cursor-pointer">
                 <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 fill-current" viewBox="0 0 20 20">
-                    <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 2.78a1 1 0 011.415 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zm2.78 4.22a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-4.22 5.657a1 1 0 010 1.415l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM4.78 14.22a1 1 0 010-1.414l.707-.707a1 1 0 011.414 1.414l-.707.707a1 1 0 01-1.414 0zM2 10a1 1 0 011-1h1a1 1 0 110 2H3a1 1 0 01-1-1zm2.78-5.657a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM10 6a4 4 0 100 8 4 4 0 000-8z" />
+                    <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 2.78a1 1 0 011.415 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zm2.78 4.22a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-4.22 5.657a1 1 0 010 1.415l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM4.78 14.22a1 1 0 010-1.414l.707.707a1 1 0 011.414 1.414l-.707.707a1 1 0 01-1.414 0zM2 10a1 1 0 011-1h1a1 1 0 110 2H3a1 1 0 01-1-1zm2.78-5.657a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM10 6a4 4 0 100 8 4 4 0 000-8z" />
                 </svg>
                 <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 fill-current" viewBox="0 0 20 20">
                     <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
@@ -85,7 +85,7 @@
                         <textarea id="bio" name="bio" rows="2" readonly class="editable-field w-full bg-transparent border-none p-0 font-semibold text-zinc-900 dark:text-white text-base focus:ring-0 cursor-default resize-none">{{ old('bio', $user->bio) }}</textarea>
                     </div>
 
-                    {{-- Tombol Simpan (Awalnya tersembunyi, muncul saat pensil diklik) --}}
+                    {{-- Tombol Simpan Perubahan --}}
                     <div id="save-button-wrapper" class="hidden justify-end pt-2">
                         <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition cursor-pointer">
                             Simpan Perubahan
@@ -109,13 +109,23 @@
                         </div>
                     </div>
 
-                    {{-- Danger Zone (Ubah Password) --}}
-                    <div class="bg-white dark:bg-[#212529] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 space-y-4 transition-colors duration-200 shadow-sm">
-                        <h3 class="text-sm font-semibold text-zinc-900 dark:text-white">Danger Zone</h3>
+                    {{-- Danger Zone (Ubah Password & Hapus Akun) --}}
+                    <div class="bg-white dark:bg-[#212529] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 space-y-3 transition-colors duration-200 shadow-sm">
+                        <h3 class="text-sm font-semibold text-zinc-900 dark:text-white mb-2">Danger Zone</h3>
 
-                        <button type="button" onclick="alert('Fitur Ubah Password dapat diarahkan ke form password.');" class="w-full py-2.5 px-4 bg-red-600 hover:bg-red-700 dark:bg-red-900/80 dark:hover:bg-red-800 text-white dark:text-red-200 text-sm font-medium rounded-xl transition cursor-pointer text-center">
+                        {{-- Tombol Ubah Password --}}
+                        <button type="button" onclick="alert('Fitur Ubah Password dapat diarahkan ke form password.');" class="w-full py-2.5 px-4 bg-zinc-700 hover:bg-zinc-800 text-white text-sm font-medium rounded-xl transition cursor-pointer text-center">
                             Ubah Password
                         </button>
+
+                        {{-- Form & Tombol Hapus Akun (Di bawah Ubah Password) --}}
+                        <form action="{{ route('profile.destroy') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini secara permanen?');">
+                            @csrf
+                            @method('delete')
+                            <button type="submit" class="w-full py-2.5 px-4 bg-red-600 hover:bg-red-700 dark:bg-red-900/80 dark:hover:bg-red-800 text-white dark:text-red-200 text-sm font-medium rounded-xl transition cursor-pointer text-center">
+                                Hapus Akun
+                            </button>
+                        </form>
                     </div>
 
                 </div>
@@ -124,9 +134,9 @@
         </main>
     </div>
 
-    {{-- Script JavaScript untuk Mengontrol Aksi Pensil & Dark Mode --}}
+    {{-- Script JavaScript --}}
     <script>
-        // --- Toggle Edit Mode dari Pensil ---
+        // Toggle Edit Mode dari Pensil
         const editBtn = document.getElementById('edit-toggle-btn');
         const editableFields = document.querySelectorAll('.editable-field');
         const saveBtnWrapper = document.getElementById('save-button-wrapper');
@@ -157,7 +167,7 @@
             }
         });
 
-        // --- Toggle Dark / Light Mode ---
+        // Toggle Dark / Light Mode
         const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
         const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
         const themeToggleBtn = document.getElementById('theme-toggle');
