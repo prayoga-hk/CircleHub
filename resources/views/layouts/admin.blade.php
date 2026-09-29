@@ -22,7 +22,7 @@
                     Member
                 </x-admin.sidebar-link>
 
-                <x-admin.sidebar-link href="#">
+                <x-admin.sidebar-link :href="route('admin.posts.index')" :active="request()->routeIs('admin.posts.*')">
                     Postingan
                 </x-admin.sidebar-link>
 

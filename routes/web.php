@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Admin\AdminPostController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\StatisticController;
@@ -57,7 +58,7 @@ Route::middleware(['auth'])->group(function () {
     | Admin Routes (Prefix: /dashboard/..., Name: admin.)
     |--------------------------------------------------------------------------
     */
-    Route::prefix('dashboard')->name('admin.')->group(function () {
+    Route::prefix('dashboard')->middleware('admin')->name('admin.')->group(function () {
 
         // Statistik
         Route::get('/statistik', [StatisticController::class, 'index'])->name('statistics.index');
@@ -67,6 +68,10 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/users/{user}/promote', [AdminUserController::class, 'promote'])->name('users.promote');
         Route::patch('/users/{user}/ban', [AdminUserController::class, 'ban'])->name('users.ban');
         Route::patch('/users/{user}/unban', [AdminUserController::class, 'unban'])->name('users.unban');
+
+        // Post Management
+        Route::get('/posts', [AdminPostController::class, 'index'])->name('posts.index');
+        Route::delete('/posts/{post}', [AdminPostController::class, 'destroy'])->name('posts.destroy');
 
         // Category Management
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
