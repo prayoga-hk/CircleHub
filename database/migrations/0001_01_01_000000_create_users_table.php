@@ -15,13 +15,30 @@ return new class extends Migration
             if (!Schema::hasColumn('users', 'bio')) {
                 $table->text('bio')->nullable()->after('role');
             }
+            if (!Schema::hasColumn('users', 'avatar')) {
+                $table->string('avatar')->nullable()->after('bio');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['role', 'bio']);
+            $columnsToDrop = [];
+
+            if (Schema::hasColumn('users', 'role')) {
+                $columnsToDrop[] = 'role';
+            }
+            if (Schema::hasColumn('users', 'bio')) {
+                $columnsToDrop[] = 'bio';
+            }
+            if (Schema::hasColumn('users', 'avatar')) {
+                $columnsToDrop[] = 'avatar';
+            }
+
+            if (!empty($columnsToDrop)) {
+                $table->dropColumn($columnsToDrop);
+            }
         });
     }
 };

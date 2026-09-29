@@ -46,17 +46,43 @@
                 </div>
             @endif
 
+            {{-- Pesan Error Validasi (misal: format file foto salah) --}}
+            @if ($errors->has('avatar'))
+                <div class="max-w-6xl mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm">
+                    {{ $errors->first('avatar') }}
+                </div>
+            @endif
+
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl">
                 
                 {{-- Kolom Kiri: Form Informasi Profil Utama --}}
-                <form action="{{ route('profile.update') }}" method="POST" class="lg:col-span-2 bg-white dark:bg-[#212529] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 space-y-6 transition-colors duration-200 shadow-sm">
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="lg:col-span-2 bg-white dark:bg-[#212529] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 space-y-6 transition-colors duration-200 shadow-sm">
                     @csrf
                     @method('patch')
 
                     {{-- Header Profile Pic + Tombol Pensil Aktif --}}
                     <div class="flex items-center justify-between pb-4 border-b border-zinc-100 dark:border-zinc-800">
-                        <div class="w-20 h-20 rounded-full bg-indigo-600 text-white dark:bg-zinc-300 dark:text-zinc-900 font-bold text-3xl flex items-center justify-center select-none transition-colors duration-200">
-                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        <div class="relative group">
+                            {{-- Container Foto Profil --}}
+                            <div class="w-20 h-20 rounded-full overflow-hidden bg-indigo-600 text-white dark:bg-zinc-300 dark:text-zinc-900 font-bold text-3xl flex items-center justify-center select-none transition-colors duration-200 border-2 border-transparent relative">
+                                @if ($user->avatar)
+                                    <img id="avatar-preview" src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                                @else
+                                    <img id="avatar-preview" src="" alt="{{ $user->name }}" class="w-full h-full object-cover hidden">
+                                    <span id="avatar-initial">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+                                @endif
+
+                                {{-- Overlay Tombol Unggah Foto (Tampil saat mode edit aktif) --}}
+                                <label for="avatar-input" id="avatar-overlay" class="hidden absolute inset-0 bg-black/50 items-center justify-center cursor-pointer transition-opacity">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </label>
+                            </div>
+
+                            {{-- Input File Tersembunyi --}}
+                            <input type="file" id="avatar-input" name="avatar" accept="image/*" class="hidden" disabled>
                         </div>
                         
                         {{-- Tombol Pensil untuk toggle mode edit/baca --}}
@@ -140,6 +166,10 @@
         const editBtn = document.getElementById('edit-toggle-btn');
         const editableFields = document.querySelectorAll('.editable-field');
         const saveBtnWrapper = document.getElementById('save-button-wrapper');
+        const avatarInput = document.getElementById('avatar-input');
+        const avatarOverlay = document.getElementById('avatar-overlay');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const avatarInitial = document.getElementById('avatar-initial');
         let isEditing = false;
 
         editBtn.addEventListener('click', function() {
@@ -158,12 +188,34 @@
             });
 
             if (isEditing) {
+                avatarInput.removeAttribute('disabled');
+                avatarOverlay.classList.remove('hidden');
+                avatarOverlay.classList.add('flex');
                 saveBtnWrapper.classList.remove('hidden');
                 saveBtnWrapper.classList.add('flex');
                 document.getElementById('name').focus();
             } else {
+                avatarInput.setAttribute('disabled', 'disabled');
+                avatarOverlay.classList.add('hidden');
+                avatarOverlay.classList.remove('flex');
                 saveBtnWrapper.classList.add('hidden');
                 saveBtnWrapper.classList.remove('flex');
+            }
+        });
+
+        // Live Preview Foto Profil saat Memilih File
+        avatarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                    avatarPreview.classList.remove('hidden');
+                    if (avatarInitial) {
+                        avatarInitial.classList.add('hidden');
+                    }
+                }
+                reader.readAsDataURL(file);
             }
         });
 

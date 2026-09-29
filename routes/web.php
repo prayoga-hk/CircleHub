@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     if (auth()->check()) {
-        return redirect()->route('pages.posts.index');
+        return redirect()->route('home');
     }
     return view('welcome');
 })->name('welcome');
@@ -32,22 +32,28 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard Redirect
     Route::get('/dashboard', function () {
-        return redirect()->route('admin.users.index');
+        return redirect()->route('admin.statistics.index');
     })->name('dashboard');
 
-    // Posts (Postingan)
-    Route::get('/home', [PostController::class, 'index'])->name('pages.posts.index');
+    // Posts (Postingan Utama & Home)
+    Route::get('/home', [PostController::class, 'index'])->name('home');
+    
+    // Alias Pengaman
+    Route::get('/posts-index', [PostController::class, 'index'])->name('pages.posts.index');
+    
     Route::get('/posts/create', [PostController::class, 'create'])->name('pages.posts.create');
     Route::post('/posts', [PostController::class, 'store'])->name('pages.posts.store');
     
-    // Fitur Detail/Komentar & Like Postingan
+    // Detail/Komentar & Like Postingan
     Route::get('/posts/{post}', [PostController::class, 'show'])->name('pages.posts.show');
     Route::post('/posts/{post}/like', [PostController::class, 'toggleLike'])->name('posts.like');
-    
-    // Fitur Simpan Komentar (Baru Ditambahkan)
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
 
-    // Profile
+    // Fitur Kategori untuk Pengguna (User Level)
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
+
+    // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
@@ -73,9 +79,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/posts', [AdminPostController::class, 'index'])->name('posts.index');
         Route::delete('/posts/{post}', [AdminPostController::class, 'destroy'])->name('posts.destroy');
 
-        // Category Management
+        // Category Management (Admin CRUD)
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+        Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
         Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+        Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
         Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
         Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
     });

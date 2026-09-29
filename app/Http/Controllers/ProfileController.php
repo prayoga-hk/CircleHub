@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -21,7 +22,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update data profil user (Username, Email, Bio).
+     * Update data profil user (Username, Email, Bio, Avatar).
      */
     public function update(Request $request)
     {
@@ -31,13 +32,32 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'bio' => ['nullable', 'string', 'max:500'],
+            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'], // Maksimal 2MB
         ]);
 
-        $user->fill($validated);
+        // Proses Upload Avatar jika ada file baru yang diunggah
+        if ($request->hasFile('avatar')) {
+            // Hapus avatar lama dari storage jika ada
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
 
-        if ($user->isDirty('email')) {
+            // Simpan avatar baru ke storage/app/public/avatars
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $path;
+        }
+
+        // Reset verifikasi email jika email diubah
+        if ($validated['email'] !== $user->email) {
             $user->email_verified_at = null;
         }
+
+        // Isi data nama, email, dan bio
+        $user->fill([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'bio' => $validated['bio'] ?? null,
+        ]);
 
         $user->save();
 
@@ -62,7 +82,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Hapus akun user.
+     * Hapus akun user beserta avatar.
      */
     public function destroy(Request $request)
     {
@@ -71,6 +91,11 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+
+        // Hapus file avatar dari storage jika ada
+        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            Storage::disk('public')->delete($user->avatar);
+        }
 
         Auth::logout();
 

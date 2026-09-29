@@ -21,37 +21,39 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-     public function store(Request $request): RedirectResponse
-     {
-         $request->validate([
-             'login'    => ['required', 'string'],
-             'password' => ['required', 'string'],
-         ]);
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'login'    => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ]);
 
-         // Cek login via email atau username (name)
-         $loginType = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+        // Cek login via email atau username (name)
+        $loginType = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
 
-         $credentials = [
-             $loginType => $request->input('login'),
-             'password' => $request->input('password'),
-         ];
+        $credentials = [
+            $loginType => $request->input('login'),
+            'password' => $request->input('password'),
+        ];
 
-         if (Auth::attempt($credentials, $request->boolean('remember'))) {
-             $request->session()->regenerate();
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();
 
-             $user = Auth::user();
+            $user = Auth::user();
 
-             if ($user->role === 'admin') {
-                 return redirect()->route('admin.statistics.index');
-             }
+            // Redirect berdasarkan role
+            if ($user->role === 'admin') {
+                return redirect()->intended(route('admin.statistics.index'));
+            }
 
-             return redirect('/');
-         }
+            // DIPERBAIKI: Langsung arahkan ke route('home') agar tidak perlu mutar ke rute '/'
+            return redirect()->intended(route('home'));
+        }
 
-         return back()->withErrors([
-             'login' => 'Username atau Password yang kamu masukkan salah.',
-         ])->onlyInput('login');
-     }
+        return back()->withErrors([
+            'login' => 'Username atau Password yang kamu masukkan salah.',
+        ])->onlyInput('login');
+    }
 
     /**
      * Destroy an authenticated session.
@@ -64,6 +66,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('welcome');
     }
 }
