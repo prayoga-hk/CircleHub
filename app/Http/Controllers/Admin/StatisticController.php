@@ -13,16 +13,12 @@ class StatisticController extends Controller
 {
     public function index(): View
     {
-        $totalMembers = User::where('role', 'member')->count();
-        $totalAdmins = User::where('role', 'admin')->count();
-        $totalBanned = User::where('is_suspended', true)->count();
+        $totalMembers = User::count();
         $totalCategories = Category::count();
         $totalPosts = Post::count();
 
         return view('admin.statistics.index', compact(
             'totalMembers',
-            'totalAdmins',
-            'totalBanned',
             'totalCategories',
             'totalPosts'
         ));
