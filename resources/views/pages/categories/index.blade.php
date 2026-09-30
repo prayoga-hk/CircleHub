@@ -46,7 +46,7 @@
 
             {{-- Container Kategori --}}
             <div class="w-full max-w-xl space-y-6 pt-4">
-                @forelse($categories as $category)
+                @forelse ($categories as $category)
                     <div class="flex items-center justify-between p-2">
                         <div class="flex items-center gap-5">
                             <div class="w-16 h-16 rounded-full bg-zinc-300 dark:bg-zinc-600 shrink-0"></div>
@@ -58,7 +58,7 @@
 
                         <a href="{{ route('pages.categories.show', $category->id) }}"
                            class="bg-[#6366f1] hover:bg-[#4f46e5] text-white font-medium px-8 py-2.5 rounded-full transition duration-200 text-sm shadow-md">
-                           Lihat
+                            Lihat
                         </a>
                     </div>
                 @empty

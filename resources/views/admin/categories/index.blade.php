@@ -26,34 +26,37 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-800/40">
-                @forelse ($categories as $category)
-                    <tr class="hover:bg-slate-800/20 transition-colors">
-                        <td class="px-6 py-4 text-white">{{ $category->name }}</td>
-                        <td class="px-6 py-4 text-slate-400 font-mono text-xs">{{ $category->slug }}</td>
-                        <td class="px-6 py-4 text-right relative">
-                            <button type="button" onclick="toggleDropdown(event, 'dropdown-category-{{ $category->id }}')" class="text-slate-400 hover:text-white p-2 rounded-lg cursor-pointer">
-                                &#8942;
-                            </button>
-
-                            <div id="dropdown-category-{{ $category->id }}" class="dropdown-menu hidden absolute right-12 top-0 w-32 bg-[#181D2D] border border-slate-700/60 rounded-lg shadow-xl z-50 text-left py-1">                                <button type="button" onclick="openCategoryEditModal('{{ route('admin.categories.update', $category) }}', '{{ $category->name }}')" class="w-full px-4 py-2 text-xs text-slate-300 hover:bg-slate-700/50 text-left cursor-pointer">
-                                    Edit
+                @if (isset($categories) && count($categories) > 0)
+                    @foreach ($categories as $category)
+                        <tr class="hover:bg-slate-800/20 transition-colors">
+                            <td class="px-6 py-4 text-white">{{ $category->name }}</td>
+                            <td class="px-6 py-4 text-slate-400 font-mono text-xs">{{ $category->slug }}</td>
+                            <td class="px-6 py-4 text-right relative">
+                                <button type="button" onclick="toggleDropdown(event, 'dropdown-category-{{ $category->id }}')" class="text-slate-400 hover:text-white p-2 rounded-lg cursor-pointer">
+                                    &#8942;
                                 </button>
 
-                                <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kategori ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="w-full px-4 py-2 text-xs text-rose-400 hover:bg-rose-500/10 text-left cursor-pointer">
-                                        Hapus
+                                <div id="dropdown-category-{{ $category->id }}" class="dropdown-menu hidden absolute right-12 top-0 w-32 bg-[#181D2D] border border-slate-700/60 rounded-lg shadow-xl z-50 text-left py-1">
+                                    <button type="button" onclick="openCategoryEditModal('{{ route('admin.categories.update', $category) }}', '{{ $category->name }}')" class="w-full px-4 py-2 text-xs text-slate-300 hover:bg-slate-700/50 text-left cursor-pointer">
+                                        Edit
                                     </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
+
+                                    <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kategori ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-full px-4 py-2 text-xs text-rose-400 hover:bg-rose-500/10 text-left cursor-pointer">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
                     <tr>
                         <td colspan="3" class="px-6 py-8 text-center text-slate-500 text-xs">Belum ada kategori yang ditambahkan.</td>
                     </tr>
-                @endforelse
+                @endif
             </tbody>
         </table>
     </div>

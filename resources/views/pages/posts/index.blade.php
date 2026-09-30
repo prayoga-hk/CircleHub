@@ -19,6 +19,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
+
+        /* Styling Background Fixed & Smooth Crossfade */
+        .bg-layer-light {
+            background-image: url('{{ asset("images/lightBg.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .bg-layer-dark {
+            background-image: url('{{ asset("images/darkBg.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-zinc-900 dark:bg-[#18181b] dark:text-zinc-100 h-screen w-screen overflow-hidden flex flex-col m-0 p-0 transition-colors duration-200">
@@ -32,6 +49,10 @@
         {{-- Main Container --}}
         <main class="flex-1 relative bg-slate-50 dark:bg-[#000816] overflow-y-auto flex flex-col items-center p-6 transition-colors duration-200">
 
+            {{-- Layer Gambar Background Fixed (Diam di tempat) --}}
+            <div class="fixed inset-0 pointer-events-none z-0 bg-layer-light opacity-100 dark:opacity-0 transition-opacity duration-300"></div>
+            <div class="fixed inset-0 pointer-events-none z-0 bg-layer-dark opacity-0 dark:opacity-100 transition-opacity duration-300"></div>
+
             {{-- Tombol Toggle Gelap / Terang --}}
             <button id="theme-toggle" type="button" class="fixed top-20 right-6 z-50 p-3 rounded-full bg-white/80 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 shadow-lg backdrop-blur-md hover:scale-105 transition-all cursor-pointer">
                 <!-- Ikon Matahari (Tampil saat mode dark) -->
@@ -44,6 +65,7 @@
                 </svg>
             </button>
 
+            {{-- Content Wrapper --}}
             <div class="relative z-10 w-full max-w-xl space-y-4">
                 @forelse ($posts as $post)
                     <x-post-card

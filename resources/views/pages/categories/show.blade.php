@@ -19,17 +19,21 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
 
-        /* Crossfade Gambar Background */
+        /* Background Fixed & Terpusat */
         .bg-layer-light {
             background-image: url('{{ asset("images/lightbg.jpg") }}');
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
 
         .bg-layer-dark {
             background-image: url('{{ asset("images/darkBg.jpg") }}');
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
     </style>
 </head>
@@ -50,11 +54,9 @@
 
         <main class="flex-1 relative overflow-y-auto p-8 transition-colors duration-200 bg-slate-50 dark:bg-[#000816] flex flex-col items-center">
 
-            {{-- Layer Gambar Mode Terang --}}
-            <div class="absolute inset-0 bg-layer-light opacity-100 dark:opacity-0 transition-opacity duration-300 pointer-events-none"></div>
-
-            {{-- Layer Gambar Mode Gelap --}}
-            <div class="absolute inset-0 bg-layer-dark opacity-0 dark:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            {{-- Layer Gambar Background Fixed (Diam saat di-scroll) --}}
+            <div class="fixed inset-0 pointer-events-none z-0 bg-layer-light opacity-100 dark:opacity-0 transition-opacity duration-300"></div>
+            <div class="fixed inset-0 pointer-events-none z-0 bg-layer-dark opacity-0 dark:opacity-100 transition-opacity duration-300"></div>
 
             {{-- Tombol Toggle Dark / Light Mode --}}
             <button id="theme-toggle" type="button" class="fixed top-20 right-8 z-50 p-3 rounded-full bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 shadow-md hover:scale-105 transition-all cursor-pointer">
@@ -70,7 +72,7 @@
             <div class="relative z-10 w-full max-w-2xl flex flex-col items-center">
                 <div class="w-full mb-3">
                     <span class="text-sm font-semibold text-zinc-700 dark:text-zinc-300 capitalize drop-shadow-sm transition-colors duration-300">
-                        {{ $category->name }}
+                        {{ $category->name ?? '' }}
                     </span>
                 </div>
 
@@ -81,27 +83,27 @@
                         {{-- Header: Avatar + Username + Waktu --}}
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center gap-3">
-                                @if ($post->user && $post->user->avatar)
+                                @if (isset($post->user) && $post->user->avatar)
                                     <img src="{{ asset('storage/' . $post->user->avatar) }}"
                                          class="w-10 h-10 rounded-full object-cover shadow-sm"
                                          alt="{{ $post->user->name }}">
                                 @else
                                     <div class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
-                                        {{ strtoupper(substr($post->user->name ?? 'U', 0, 1)) }}
+                                        {{ strtoupper(substr(optional($post->user)->name ?? 'U', 0, 1)) }}
                                     </div>
                                 @endif
                                 <span class="font-bold text-zinc-900 dark:text-white text-base transition-colors duration-300">
-                                    {{ $post->user->name ?? 'Anonim' }}
+                                    {{ optional($post->user)->name ?? 'Anonim' }}
                                 </span>
                             </div>
                             <span class="text-xs text-zinc-500 dark:text-zinc-400 transition-colors duration-300">
-                                {{ $post->created_at->diffForHumans() }}
+                                {{ $post->created_at ? $post->created_at->diffForHumans() : '' }}
                             </span>
                         </div>
 
                         {{-- Gambar Postingan --}}
                         <div class="w-full h-80 bg-[#6366f1] rounded-2xl mb-4 overflow-hidden flex items-center justify-center shadow-inner">
-                            @if ($post->image)
+                            @if (isset($post->image) && $post->image)
                                 <img src="{{ asset('storage/' . $post->image) }}"
                                      class="w-full h-full object-cover"
                                      alt="Post Image">
@@ -143,12 +145,14 @@
                         {{-- Section Komentar --}}
                         <div class="comment-section hidden border-t border-zinc-200 dark:border-zinc-800 pt-4 mt-4 space-y-4 transition-colors duration-300">
                             <div class="comments-list space-y-3 max-h-48 overflow-y-auto pr-1">
-                                @foreach ($post->comments ?? [] as $comment)
-                                    <div class="flex gap-2.5 text-xs bg-zinc-50 dark:bg-zinc-800/50 p-2.5 rounded-xl border border-zinc-200/50 dark:border-zinc-700/50 transition-colors duration-300">
-                                        <span class="font-bold text-zinc-900 dark:text-white">{{ $comment->user->name ?? 'Anonim' }}:</span>
-                                        <span class="text-zinc-700 dark:text-zinc-300">{{ $comment->body ?? $comment->content ?? '' }}</span>
-                                    </div>
-                                @endforeach
+                                @if (isset($post->comments) && count($post->comments) > 0)
+                                    @foreach ($post->comments as $comment)
+                                        <div class="flex gap-2.5 text-xs bg-zinc-50 dark:bg-zinc-800/50 p-2.5 rounded-xl border border-zinc-200/50 dark:border-zinc-700/50 transition-colors duration-300">
+                                            <span class="font-bold text-zinc-900 dark:text-white">{{ optional($comment->user)->name ?? 'Anonim' }}:</span>
+                                            <span class="text-zinc-700 dark:text-zinc-300">{{ $comment->body ?? $comment->content ?? '' }}</span>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
 
                             <form onsubmit="submitComment(event, this)" class="flex items-center gap-2 pt-2">
@@ -223,7 +227,7 @@
             section.classList.toggle('hidden');
         }
 
-        // ====== Submit Komentar (per postingan) ======
+        // ====== Submit Komentar (Aman dari XSS) ======
         function submitComment(event, form) {
             event.preventDefault();
             const input = form.querySelector('.comment-input');
@@ -231,13 +235,23 @@
             const list = card.querySelector('.comments-list');
             const countEl = card.querySelector('.comment-count');
 
-            if (input.value.trim() !== "") {
+            const text = input.value.trim();
+            if (text !== "") {
                 const box = document.createElement('div');
                 box.className = "flex gap-2.5 text-xs bg-zinc-50 dark:bg-zinc-800/50 p-2.5 rounded-xl border border-zinc-200/50 dark:border-zinc-700/50 transition-colors duration-300";
-                box.innerHTML = `
-                    <span class="font-bold text-zinc-900 dark:text-white">Anda:</span>
-                    <span class="text-zinc-700 dark:text-zinc-300">${input.value}</span>
-                `;
+
+                const userSpan = document.createElement('span');
+                userSpan.className = "font-bold text-zinc-900 dark:text-white";
+                userSpan.textContent = "Anda:";
+
+                const commentSpan = document.createElement('span');
+                commentSpan.className = "text-zinc-700 dark:text-zinc-300";
+                commentSpan.textContent = text;
+
+                box.appendChild(userSpan);
+                box.appendChild(document.createTextNode(" "));
+                box.appendChild(commentSpan);
+
                 list.appendChild(box);
 
                 let count = parseInt(countEl.textContent) || 0;
