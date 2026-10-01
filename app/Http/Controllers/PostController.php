@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\Category;
 use App\Models\Like;
+use App\Notifications\PostLiked;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        // Ambil data post beserta relasi user & category,
-        // serta hitung jumlah likes dan comments secara otomatis.
+
         $posts = Post::with(['user', 'category'])
             ->withCount(['likes', 'comments'])
             ->latest()
@@ -87,20 +87,21 @@ class PostController extends Controller
     {
         $userId = Auth::id();
 
-        // Cek apakah user sudah menyukai postingan ini
         $existingLike = Like::where('post_id', $post->id)
                             ->where('user_id', $userId)
                             ->first();
 
         if ($existingLike) {
-            // Hapus like jika sudah ada (Unlike)
             $existingLike->delete();
         } else {
-            // Tambahkan record baru jika belum di-like
             Like::create([
                 'post_id' => $post->id,
                 'user_id' => $userId,
             ]);
+
+            if ($post->user_id !== $userId) {
+                $post->user->notify(new PostLiked($post, Auth::user()));
+            }
         }
 
         return back();

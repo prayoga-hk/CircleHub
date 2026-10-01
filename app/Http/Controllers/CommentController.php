@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Comment;
+use App\Notifications\PostCommented; // ← tambahkan
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -13,19 +14,20 @@ class CommentController extends Controller
      */
     public function store(Request $request, Post $post)
     {
-        // 1. Validasi input komentar
         $request->validate([
             'body' => 'required|string|max:1000',
         ]);
 
-        // 2. Simpan komentar
-        Comment::create([
+        $comment = Comment::create([
             'user_id' => auth()->id(),
             'post_id' => $post->id,
             'body'    => $request->body,
         ]);
 
-        // 3. Kembali ke halaman sebelumnya
+        if ($post->user_id !== auth()->id()) {
+            $post->user->notify(new PostCommented($post, auth()->user(), $comment));
+        }
+
         return back()->with('success', 'Komentar berhasil dikirim!');
     }
 }

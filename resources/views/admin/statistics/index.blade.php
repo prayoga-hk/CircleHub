@@ -9,8 +9,6 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <x-admin.stat-card label="Member" :value="$totalMembers" />
-        <x-admin.stat-card label="Admin" :value="$totalAdmins" />
-        <x-admin.stat-card label="Banned" :value="$totalBanned" />
         <x-admin.stat-card label="Kategori" :value="$totalCategories" />
         <x-admin.stat-card label="Posting" :value="$totalPosts" />
     </div>

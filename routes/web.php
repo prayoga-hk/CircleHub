@@ -5,8 +5,10 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Admin\AdminPostController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\StatisticController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,6 +52,12 @@ Route::middleware(['auth'])->group(function () {
     //Fitur Kategori
     Route::get('/categories', [CategoryController::class, 'index'])->name('pages.categories.index');
     Route::get('/categories/{id}', [CategoryController::class, 'show'])->name('pages.categories.show');
+
+    // Fitur Notifikasi
+    Route::get('/pages/notification', [NotificationController::class, 'index'])->name('pages.notification');
+    Route::get('/pages/notification/unread-count', [NotificationController::class, 'unreadCount'])->name('pages.notification.unreadCount');
+    Route::get('/pages/notification/{id}/read', [NotificationController::class, 'read'])->name('pages.notification.read');
+    Route::post('/pages/notification/read-all', [NotificationController::class, 'readAll'])->name('pages.notification.readAll');
 });
 
     // Profile
