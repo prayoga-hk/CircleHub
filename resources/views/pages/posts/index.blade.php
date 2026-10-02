@@ -57,12 +57,12 @@
                     {{-- KOTAK PENCARIAN (SEARCH BAR) --}}
                     <form action="{{ route('pages.posts.index') }}" method="GET" class="w-full">
                         <div class="relative flex items-center">
-                            <input type="text" 
-                                   name="search" 
-                                   value="{{ request('search') }}" 
-                                   placeholder="Cari berdasarkan judul, konten, atau username..." 
+                            <input type="text"
+                                   name="search"
+                                   value="{{ request('search') }}"
+                                   placeholder="Cari berdasarkan judul, konten, atau username..."
                                    class="w-full pl-11 pr-10 py-3 rounded-2xl bg-white/90 dark:bg-[#181920]/90 border border-zinc-200/80 dark:border-zinc-800/80 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 shadow-lg backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300">
-                            
+
                             {{-- Ikon Search --}}
                             <div class="absolute left-4 text-zinc-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -83,6 +83,7 @@
                             <x-post-card
                                 :id="$post->id"
                                 :username="$post->user->name ?? 'Anonim'"
+                                :avatar="$post->user->avatar ?? ''"
                                 :time="$post->created_at ? $post->created_at->diffForHumans() : 'Baru saja'"
                                 :title="$post->title"
                                 :content="$post->content"

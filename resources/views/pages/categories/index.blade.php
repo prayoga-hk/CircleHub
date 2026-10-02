@@ -21,10 +21,10 @@
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="h-screen w-screen overflow-hidden flex flex-col m-0 p-0 bg-white dark:bg-[#121214] transition-colors duration-500 ease-in-out" 
-      x-data="{ 
-          viewMode: 'grid', 
-          searchQuery: '' 
+<body class="h-screen w-screen overflow-hidden flex flex-col m-0 p-0 bg-white dark:bg-[#121214] transition-colors duration-500 ease-in-out"
+      x-data="{
+          viewMode: 'grid',
+          searchQuery: ''
       }">
 
     {{-- Navbar Utama --}}
@@ -57,7 +57,7 @@
             {{-- SCROLLABLE CONTENT AREA --}}
             <main class="relative z-10 w-full h-full overflow-y-auto p-6 md:p-10">
                 <div class="max-w-6xl mx-auto space-y-8 pb-20">
-                    
+
                     {{-- HEADER & TOOLBAR (Search & View Toggle) --}}
                     <div class="bg-white/80 dark:bg-[#181920]/80 backdrop-blur-xl border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
                         <div>
@@ -68,9 +68,9 @@
                         <div class="flex items-center gap-3 w-full md:w-auto">
                             {{-- Input Cari Kategori --}}
                             <div class="relative w-full md:w-64">
-                                <input type="text" 
-                                       x-model="searchQuery" 
-                                       placeholder="Cari kategori..." 
+                                <input type="text"
+                                       x-model="searchQuery"
+                                       placeholder="Cari kategori..."
                                        class="w-full pl-9 pr-4 py-2 rounded-xl text-xs bg-zinc-100/80 dark:bg-zinc-800/80 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
                                 <svg class="w-4 h-4 text-zinc-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                             </div>
@@ -78,16 +78,16 @@
                             {{-- TOGGLE LAYOUT (GRID VS LIST) --}}
                             <div class="flex items-center bg-zinc-100 dark:bg-zinc-800/80 p-1 rounded-xl border border-zinc-200 dark:border-zinc-700">
                                 {{-- Button Grid --}}
-                                <button @click="viewMode = 'grid'" 
-                                        :class="viewMode === 'grid' ? 'bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'" 
-                                        class="p-2 rounded-lg transition-all duration-200 cursor-pointer" 
+                                <button @click="viewMode = 'grid'"
+                                        :class="viewMode === 'grid' ? 'bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'"
+                                        class="p-2 rounded-lg transition-all duration-200 cursor-pointer"
                                         title="Tampilan Grid">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                                 </button>
                                 {{-- Button List --}}
-                                <button @click="viewMode = 'list'" 
-                                        :class="viewMode === 'list' ? 'bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'" 
-                                        class="p-2 rounded-lg transition-all duration-200 cursor-pointer" 
+                                <button @click="viewMode = 'list'"
+                                        :class="viewMode === 'list' ? 'bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'"
+                                        class="p-2 rounded-lg transition-all duration-200 cursor-pointer"
                                         title="Tampilan List">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                                 </button>
@@ -96,8 +96,8 @@
                     </div>
 
                     {{-- GRID VIEW MODE --}}
-                    <div x-show="viewMode === 'grid'" 
-                         x-transition 
+                    <div x-show="viewMode === 'grid'"
+                         x-transition
                          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @forelse ($categories as $cat)
                             <div x-show="searchQuery === '' || '{{ strtolower($cat->name) }}'.includes(searchQuery.toLowerCase())"
@@ -108,7 +108,7 @@
                                     </div>
                                     <div>
                                         <h3 class="font-bold text-lg text-zinc-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{{ $cat->name }}</h3>
-                                        <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{{ $cat->posts_count ?? $cat->users_count ?? 0 }} Anggota</p>
+                                        <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{{ $cat->posts_count ?? $cat->users_count ?? 0 }} Postingan</p>
                                     </div>
                                 </div>
                                 <div class="mt-6 pt-4 border-t border-zinc-200/60 dark:border-zinc-800/60 flex items-center justify-between">
@@ -126,8 +126,8 @@
                     </div>
 
                     {{-- LIST VIEW MODE --}}
-                    <div x-show="viewMode === 'list'" 
-                         x-transition 
+                    <div x-show="viewMode === 'list'"
+                         x-transition
                          class="space-y-4">
                         @forelse ($categories as $cat)
                             <div x-show="searchQuery === '' || '{{ strtolower($cat->name) }}'.includes(searchQuery.toLowerCase())"
