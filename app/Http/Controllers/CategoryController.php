@@ -3,22 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::withCount('posts')->latest()->get();
+        // Mengambil kategori berurutan A-Z beserta jumlah anggota/postingan
+        $categories = Category::withCount('posts') // atau 'users' jika ada relasi member
+            ->orderBy('name', 'asc')
+            ->get();
 
         return view('pages.categories.index', compact('categories'));
     }
 
     public function show($id)
     {
-        $category = Category::with(['posts' => function ($query) {
-            $query->with('user')->latest();
-        }])->findOrFail($id);
-
+        $category = Category::findOrFail($id);
         return view('pages.categories.show', compact('category'));
     }
 }

@@ -10,14 +10,27 @@ use Illuminate\Support\Facades\Storage;
 class PostController extends Controller
 {
     /**
-     * Menampilkan daftar postingan di beranda (Home Feed)
+     * Menampilkan daftar postingan di beranda dengan Fitur Pencarian
+     * (Mencakup pencarian berdasarkan Username, Judul, dan Konten)
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with(['user', 'category'])
-            ->withCount(['likes', 'comments'])
-            ->latest()
-            ->get();
+        $query = Post::with(['user', 'category'])
+            ->withCount(['likes', 'comments']);
+
+        // Filter pencarian jika terdapat query search
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($userQuery) use ($search) {
+                      $userQuery->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $posts = $query->latest()->get();
 
         // Mengecek apakah postingan sudah di-like oleh user yang sedang login
         if (auth()->check()) {
