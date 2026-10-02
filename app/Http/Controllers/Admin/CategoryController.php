@@ -57,7 +57,7 @@ class CategoryController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui!');
+        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil diperbarui!');
     }
 
     public function destroy(Category $category)

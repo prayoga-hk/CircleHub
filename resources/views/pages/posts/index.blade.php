@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CircleHub - Posts</title>
+    <title>CircleHub - Home</title>
 
-    {{-- Script untuk mencegah flicker warna saat halaman baru dibuka --}}
+    {{-- Script Mencegah Flicker Tema Saat Page Reload --}}
     <script>
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
@@ -19,76 +19,75 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-
-        /* Styling Background Fixed & Smooth Crossfade */
-        .bg-layer-light {
-            background-image: url('{{ asset("images/lightBg.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }
-
-        .bg-layer-dark {
-            background-image: url('{{ asset("images/darkBg.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }
     </style>
 </head>
-<body class="bg-gray-100 text-zinc-900 dark:bg-[#18181b] dark:text-zinc-100 h-screen w-screen overflow-hidden flex flex-col m-0 p-0 transition-colors duration-200">
+<body class="h-screen w-screen overflow-hidden flex flex-col m-0 p-0 bg-white dark:bg-[#121214] transition-colors duration-500 ease-in-out">
 
-    <x-navbar />
+    {{-- Navbar Utama --}}
+    <div class="relative z-30">
+        <x-navbar />
+    </div>
 
     <div class="flex flex-1 w-full overflow-hidden relative">
 
+        {{-- Sidebar Menu Navigasi --}}
         <x-sidebar />
 
-        {{-- Main Container --}}
-        <main class="flex-1 relative bg-slate-50 dark:bg-[#000816] overflow-y-auto flex flex-col items-center p-6 transition-colors duration-200">
+        {{-- AREA UTAMA LAYOUT --}}
+        <div class="flex-1 relative h-full w-full overflow-hidden">
 
-            {{-- Layer Gambar Background Fixed (Diam di tempat) --}}
-            <div class="fixed inset-0 pointer-events-none z-0 bg-layer-light opacity-100 dark:opacity-0 transition-opacity duration-300"></div>
-            <div class="fixed inset-0 pointer-events-none z-0 bg-layer-dark opacity-0 dark:opacity-100 transition-opacity duration-300"></div>
+            {{-- 1. GAMBAR BACKGROUND LIGHT MODE --}}
+            <img 
+                src="{{ asset('images/lightBg.jpg') }}" 
+                alt="Light Background" 
+                class="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 opacity-100 dark:opacity-0 transition-opacity duration-500 ease-in-out"
+            />
 
-            {{-- Tombol Toggle Gelap / Terang --}}
-            <button id="theme-toggle" type="button" class="fixed top-20 right-6 z-50 p-3 rounded-full bg-white/80 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 shadow-lg backdrop-blur-md hover:scale-105 transition-all cursor-pointer">
-                <!-- Ikon Matahari (Tampil saat mode dark) -->
+            {{-- 2. GAMBAR BACKGROUND DARK MODE --}}
+            <img 
+                src="{{ asset('images/darkBg.jpg') }}" 
+                alt="Dark Background" 
+                class="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 opacity-0 dark:opacity-100 transition-opacity duration-500 ease-in-out"
+            />
+
+            {{-- 3. TOMBOL TOGGLE GELAP / TERANG --}}
+            <button id="theme-toggle" type="button" aria-label="Toggle Theme" class="absolute top-6 right-8 z-50 p-3 rounded-full bg-white/80 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/80 dark:border-zinc-700/80 shadow-lg backdrop-blur-md hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">
                 <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 fill-current" viewBox="0 0 20 20">
                     <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 2.78a1 1 0 011.415 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zm2.78 4.22a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-4.22 5.657a1 1 0 010 1.415l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM4.78 14.22a1 1 0 010-1.414l.707-.707a1 1 0 011.414 1.414l-.707.707a1 1 0 01-1.414 0zM2 10a1 1 0 011-1h1a1 1 0 110 2H3a1 1 0 01-1-1zm2.78-5.657a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM10 6a4 4 0 100 8 4 4 0 000-8z" />
                 </svg>
-                <!-- Ikon Bulan (Tampil saat mode light) -->
                 <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 fill-current" viewBox="0 0 20 20">
                     <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
                 </svg>
             </button>
 
-            {{-- Content Wrapper --}}
-            <div class="relative z-10 w-full max-w-xl space-y-4">
-                @forelse ($posts as $post)
-                    <x-post-card
-                        :id="$post->id"
-                        :username="$post->user->name ?? 'Anonim'"
-                        :time="$post->created_at->diffForHumans()"
-                        :title="$post->title"
-                        :content="$post->content"
-                        :image="$post->image"
-                        :likes="$post->likes_count ?? 0"
-                        :comments="$post->comments_count ?? 0"
-                        :isLiked="auth()->check() ? $post->likes()->where('user_id', auth()->id())->exists() : false"
-                    />
-                @empty
-                    <div class="p-6 text-center text-zinc-600 dark:text-zinc-400 bg-white/60 dark:bg-zinc-900/60 rounded-xl backdrop-blur-sm border border-zinc-200 dark:border-zinc-800">
-                        Belum ada postingan saat ini.
-                    </div>
-                @endforelse
-            </div>
-        </main>
+            {{-- 4. CONTAINER SCROLLABLE FEED POSTINGAN --}}
+            <main class="relative z-10 w-full h-full overflow-y-auto flex flex-col items-center p-6">
+                <div class="w-full max-w-xl space-y-6 pb-16">
+                    @forelse ($posts as $post)
+                        <div class="w-full bg-white/95 dark:bg-[#181920]/95 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-6 shadow-xl transition-colors duration-500 ease-in-out">
+                            <x-post-card
+                                :id="$post->id"
+                                :username="$post->user->name ?? 'Anonim'"
+                                :time="$post->created_at ? $post->created_at->diffForHumans() : 'Baru saja'"
+                                :title="$post->title"
+                                :content="$post->content"
+                                :images="$post->images"
+                                :likes="is_numeric($post->likes) ? (int)$post->likes : ($post->likes_count ?? $post->likes()->count())"
+                                :comments="is_numeric($post->comments) ? (int)$post->comments : ($post->comments_count ?? $post->comments()->count())"
+                                :isLiked="auth()->check() ? ($post->is_liked_by_user ?? $post->isLikedBy(auth()->id())) : false"
+                            />
+                        </div>
+                    @empty
+                        <div class="w-full bg-white/95 dark:bg-[#181920]/95 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-8 text-center text-zinc-500 dark:text-zinc-400 shadow-lg transition-colors duration-500 ease-in-out">
+                            Belum ada postingan di beranda.
+                        </div>
+                    @endforelse
+                </div>
+            </main>
+
+        </div>
     </div>
 
-    <!-- Script logika penukaran mode -->
     <script>
         const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
         const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');

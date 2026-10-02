@@ -4,104 +4,106 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Category;
-use App\Models\Like;
-use App\Notifications\PostLiked;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
     /**
-     * Menampilkan halaman utama forum beserta daftar postingan.
+     * Menampilkan daftar postingan di beranda (Home Feed)
      */
     public function index()
     {
-
         $posts = Post::with(['user', 'category'])
             ->withCount(['likes', 'comments'])
             ->latest()
             ->get();
 
+        // Mengecek apakah postingan sudah di-like oleh user yang sedang login
+        if (auth()->check()) {
+            $userId = auth()->id();
+            $posts->each(function ($post) use ($userId) {
+                $post->is_liked_by_user = $post->likes()->where('user_id', $userId)->exists();
+            });
+        }
+
         return view('pages.posts.index', compact('posts'));
     }
 
     /**
-     * Menampilkan form untuk membuat postingan baru.
+     * Menampilkan form untuk membuat postingan baru
      */
     public function create()
     {
-        // Ambil semua kategori untuk dropdown di form
-        $categories = Category::orderBy('name')->get();
-
+        $categories = Category::all();
         return view('pages.posts.create', compact('categories'));
     }
 
     /**
-     * Menyimpan postingan baru ke database.
+     * Menyimpan postingan baru ke database
      */
     public function store(Request $request)
     {
-        // 1. Validasi Input
         $request->validate([
-            'title'       => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'title'       => 'nullable|string|max:255',
             'content'     => 'required|string',
-            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*'    => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        // 2. Upload Image (Jika ada)
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('posts', 'public');
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('posts', 'public');
+                $imagePaths[] = $path;
+            }
         }
 
-        // 3. Simpan ke Database
         Post::create([
-            'user_id'     => Auth::id(),
+            'user_id'     => auth()->id(),
             'category_id' => $request->category_id,
             'title'       => $request->title,
-            'slug'        => Str::slug($request->title) . '-' . time(),
             'content'     => $request->content,
-            'image'       => $imagePath,
+            'images'      => $imagePaths,
         ]);
 
-        // 4. Redirect ke halaman index dengan pesan sukses
         return redirect()->route('pages.posts.index')->with('success', 'Postingan berhasil dibuat!');
     }
 
     /**
-     * Menampilkan detail postingan beserta komentar (saat icon komen diklik).
+     * Menampilkan detail postingan beserta komentar
      */
     public function show(Post $post)
     {
-        $post->load(['user', 'category', 'comments.user'])->loadCount(['likes', 'comments']);
+        $post->load(['user', 'category', 'comments.user']);
+        $post->loadCount(['likes', 'comments']);
+
+        if (auth()->check()) {
+            $post->is_liked_by_user = $post->likes()->where('user_id', auth()->id())->exists();
+        }
 
         return view('pages.posts.show', compact('post'));
     }
 
     /**
-     * Menangani fitur Like dan Unlike postingan.
+     * Fitur Toggle Like / Unlike Postingan
+     * Menerima instance $post via Route Model Binding
      */
     public function toggleLike(Post $post)
     {
-        $userId = Auth::id();
+        $userId = auth()->id();
 
-        $existingLike = Like::where('post_id', $post->id)
-                            ->where('user_id', $userId)
-                            ->first();
+        // Mengecek apakah user sudah menyukai postingan ini
+        $existingLike = $post->likes()->where('user_id', $userId)->first();
 
         if ($existingLike) {
+            // Jika sudah di-like, maka hapus (Unlike)
             $existingLike->delete();
         } else {
-            Like::create([
-                'post_id' => $post->id,
+            // Jika belum di-like, tambahkan ke tabel likes
+            $post->likes()->create([
                 'user_id' => $userId,
             ]);
-
-            if ($post->user_id !== $userId) {
-                $post->user->notify(new PostLiked($post, Auth::user()));
-            }
         }
 
         return back();

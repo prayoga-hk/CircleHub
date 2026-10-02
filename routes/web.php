@@ -46,11 +46,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/posts/{post}', [PostController::class, 'show'])->name('pages.posts.show');
     Route::post('/posts/{post}/like', [PostController::class, 'toggleLike'])->name('posts.like');
 
-    // Fitur Simpan Komentar (Baru Ditambahkan)
+    // Fitur Simpan Komentar
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
 
-    //Fitur Kategori
+    // Fitur Kategori (User View)
     Route::get('/categories', [CategoryController::class, 'index'])->name('pages.categories.index');
+    Route::get('/categories/index', [CategoryController::class, 'index'])->name('categories.index'); // Alias kompatibilitas
     Route::get('/categories/{id}', [CategoryController::class, 'show'])->name('pages.categories.show');
 
     // Fitur Notifikasi
@@ -58,7 +59,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pages/notification/unread-count', [NotificationController::class, 'unreadCount'])->name('pages.notification.unreadCount');
     Route::get('/pages/notification/{id}/read', [NotificationController::class, 'read'])->name('pages.notification.read');
     Route::post('/pages/notification/read-all', [NotificationController::class, 'readAll'])->name('pages.notification.readAll');
-});
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -92,5 +92,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/categories/{category}', [AdminCategoryController::class, 'update'])->name('categories.update');
         Route::delete('/categories/{category}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
     });
+
+});
 
 require __DIR__.'/auth.php';
