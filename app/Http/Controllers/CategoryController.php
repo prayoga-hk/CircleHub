@@ -15,7 +15,6 @@ class CategoryController extends Controller
 
     public function show($id)
     {
-        // Ambil kategori + postingannya (terbaru dulu)
         $category = Category::with(['posts' => function ($query) {
             $query->with('user')->latest();
         }])->findOrFail($id);
