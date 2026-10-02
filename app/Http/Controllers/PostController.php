@@ -6,7 +6,7 @@ use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str; // Tambahkan import Str di sini
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -81,7 +81,7 @@ class PostController extends Controller
             'user_id'     => auth()->id(),
             'category_id' => $request->category_id,
             'title'       => $request->title,
-            'slug'        => $slug, // Ditambahkan agar tidak menyebabkan error "Field 'slug' doesn't have a default value"
+            'slug'        => $slug,
             'content'     => $request->content,
             'images'      => $imagePaths,
         ]);
@@ -105,8 +105,7 @@ class PostController extends Controller
     }
 
     /**
-     * Fitur Toggle Like / Unlike Postingan
-     * Menerima instance $post via Route Model Binding
+     * Fitur Toggle Like / Unlike Postingan (Mendukung Request Biasa & AJAX/Fetch)
      */
     public function toggleLike(Post $post)
     {
@@ -116,12 +115,23 @@ class PostController extends Controller
         $existingLike = $post->likes()->where('user_id', $userId)->first();
 
         if ($existingLike) {
-            // Jika sudah di-like, maka hapus (Unlike)
+            // Jika sudah di-like, hapus (Unlike)
             $existingLike->delete();
+            $isLiked = false;
         } else {
             // Jika belum di-like, tambahkan ke tabel likes
             $post->likes()->create([
                 'user_id' => $userId,
+            ]);
+            $isLiked = true;
+        }
+
+        // Respons JSON jika dipanggil via Fetch API / AJAX (agar tidak reload halaman)
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json([
+                'success'    => true,
+                'isLiked'    => $isLiked,
+                'likesCount' => $post->likes()->count(),
             ]);
         }
 
