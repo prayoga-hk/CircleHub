@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str; // Tambahkan import Str di sini
 
 class PostController extends Controller
 {
@@ -72,10 +73,15 @@ class PostController extends Controller
             }
         }
 
+        // Generate slug unik berbasis judul atau konten jika judul kosong
+        $titleForSlug = $request->title ?: Str::limit($request->content, 20, '');
+        $slug = Str::slug($titleForSlug) . '-' . Str::random(5);
+
         Post::create([
             'user_id'     => auth()->id(),
             'category_id' => $request->category_id,
             'title'       => $request->title,
+            'slug'        => $slug, // Ditambahkan agar tidak menyebabkan error "Field 'slug' doesn't have a default value"
             'content'     => $request->content,
             'images'      => $imagePaths,
         ]);

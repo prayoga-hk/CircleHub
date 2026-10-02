@@ -13,12 +13,13 @@ class Post extends Model
         'user_id',
         'category_id',
         'title',
+        'slug', // Ditambahkan agar slug bisa disimpan melalui Post::create()
         'content',
         'images',
     ];
 
     /**
-     * Cast kolom images ke array (jika menyimpan multiple images/JSON)
+     * Cast kolom images ke array (menyimpan JSON / multiple images)
      */
     protected $casts = [
         'images' => 'array',
