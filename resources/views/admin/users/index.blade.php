@@ -32,8 +32,9 @@
                                 <span class="ml-2 px-2 py-0.5 text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded">Banned</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 capitalize">{{ $user->role ?? 'Member' }}</td>
+                        {{-- Urutan disesuaikan dengan header (Email dulu baru Role) --}}
                         <td class="px-6 py-4">{{ $user->email }}</td>
+                        <td class="px-6 py-4 capitalize">{{ $user->role ?? 'Member' }}</td>
                         <td class="px-6 py-4 text-right relative">
                             <button
                                 onclick="toggleDropdown(event, 'dropdown-user-{{ $user->id }}')"
@@ -76,7 +77,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3" class="px-6 py-8 text-center text-slate-500">
+                        <td colspan="4" class="px-6 py-8 text-center text-slate-500">
                             Tidak ada data member.
                         </td>
                     </tr>
