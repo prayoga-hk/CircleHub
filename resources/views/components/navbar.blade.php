@@ -2,19 +2,43 @@
 
     <!-- Logo / Brand Title -->
     <div class="flex items-center gap-2">
-        <!-- h-6 (24px) atau h-7 (28px) agar sejajar dengan text-xl. w-auto agar lebar mengikuti bentuk asli logo -->
-        <img src="https://i.ibb.co.com/LdRGnQbx/Whats-App-Image-2026-09-18-at-14-45-35-removebg-preview.png" alt="Logo CircleHub" class="h-12 w-auto object-contain">
+        <img src="https://i.ibb.co.com/LdRGnQbx/Whats-App-Image-2026-09-18-at-14-45-35-removebg-preview.png"
+             alt="Logo CircleHub"
+             class="h-12 w-auto object-contain">
 
-        <!-- Teks CircleHub -->
         <div class="text-xl font-bold tracking-wide text-zinc-900 dark:text-zinc-100">
             CircleHub
         </div>
     </div>
 
-    <!-- Icon Search -->
-    <div class="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 cursor-pointer transition">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-    </div>
+    <!-- Profile Menu (klik → halaman edit profile) -->
+    @auth
+        <a href="{{ route('profile.edit') }}"
+           class="flex items-center gap-3 px-2 py-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition cursor-pointer">
+
+            <!-- Avatar -->
+            @if(auth()->user()->avatar)
+                <img src="{{ asset('storage/' . auth()->user()->avatar) }}"
+                     alt="{{ auth()->user()->name }}"
+                     class="w-8 h-8 rounded-full object-cover shadow-sm" />
+            @else
+                <div class="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-sm shadow-sm">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                </div>
+            @endif
+
+            <!-- Username -->
+            <span class="text-sm font-medium text-zinc-800 dark:text-zinc-200 hidden sm:block">
+                {{ auth()->user()->name }}
+            </span>
+        </a>
+    @endauth
+
+    @guest
+        <!-- Tombol Login untuk tamu -->
+        <a href="{{ route('login') }}"
+           class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
+            Login
+        </a>
+    @endguest
 </header>

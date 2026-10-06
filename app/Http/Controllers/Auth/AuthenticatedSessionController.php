@@ -46,8 +46,7 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->intended(route('admin.statistics.index'));
             }
 
-            // DIPERBAIKI: Langsung arahkan ke route('home') agar tidak perlu mutar ke rute '/'
-            return redirect()->intended(route('home'));
+            return redirect()->intended(route('pages.posts.index'));
         }
 
         return back()->withErrors([

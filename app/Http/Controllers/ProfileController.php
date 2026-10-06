@@ -35,24 +35,19 @@ class ProfileController extends Controller
             'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'], // Maksimal 2MB
         ]);
 
-        // Proses Upload Avatar jika ada file baru yang diunggah
         if ($request->hasFile('avatar')) {
-            // Hapus avatar lama dari storage jika ada
             if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
 
-            // Simpan avatar baru ke storage/app/public/avatars
             $path = $request->file('avatar')->store('avatars', 'public');
             $user->avatar = $path;
         }
 
-        // Reset verifikasi email jika email diubah
         if ($validated['email'] !== $user->email) {
             $user->email_verified_at = null;
         }
 
-        // Isi data nama, email, dan bio
         $user->fill([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -92,7 +87,6 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        // Hapus file avatar dari storage jika ada
         if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
             Storage::disk('public')->delete($user->avatar);
         }
