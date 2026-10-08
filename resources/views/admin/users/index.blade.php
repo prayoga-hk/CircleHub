@@ -5,10 +5,6 @@
 @section('content')
 <div class="space-y-6 w-full relative" onclick="closeAllDropdowns(event)">
 
-    <div class="flex justify-between items-center">
-        <h2 class="text-3xl font-normal text-white">Member</h2>
-    </div>
-
     @if (session('success'))
         <x-admin.alert>{{ session('success') }}</x-admin.alert>
     @endif

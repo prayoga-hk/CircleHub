@@ -6,7 +6,6 @@
 <div class="space-y-6 w-full relative">
 
     <div class="flex items-center justify-between">
-        <h2 class="text-3xl font-normal text-white">Kategori</h2>
         <button type="button" onclick="openCategoryAddModal()" class="px-4 py-2 bg-[#6C5CE7] hover:bg-[#5b4bc4] text-white text-xs font-semibold rounded-xl transition shadow-lg shadow-[#6C5CE7]/20 cursor-pointer">
             + Tambah Kategori
         </button>

@@ -9,7 +9,8 @@
 </head>
 <body class="bg-[#0B0F19] text-slate-200 font-sans flex h-screen overflow-hidden antialiased">
 
-    <aside class="w-56 bg-[#0B0F19] border-r border-slate-800/60 flex flex-col justify-between p-6 shrink-0">
+    <!-- SIDEBAR -->
+    <aside class="w-56 bg-[#0B0F19] border-r border-slate-800/60 flex flex-col justify-between p-6 shrink-0 z-20">
         <div class="space-y-8">
             <h1 class="text-white font-bold text-lg px-2">Dashboard</h1>
 
@@ -46,9 +47,18 @@
         </div>
     </aside>
 
-    <main class="flex-1 overflow-y-auto p-10 bg-[#0B0F19]">
-        @yield('content')
-    </main>
+    <!-- AREA UTAMA KANAN (Navbar + Main Content) -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden bg-[#0B0F19]">
+
+        <!-- NAVBAR ADMIN (Langsung menempel di paling atas) -->
+        <x-admin.navbar :title="$__env->yieldContent('title', 'Statistik Platform')" />
+
+        <!-- MAIN KONTEN (Hanya bagian ini yang di-scroll dan diberi padding p-8) -->
+        <main class="flex-1 overflow-y-auto p-8">
+            @yield('content')
+        </main>
+
+    </div>
 
 </body>
 </html>

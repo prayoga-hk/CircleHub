@@ -5,10 +5,6 @@
 @section('content')
 <div class="space-y-6 w-full relative">
 
-    <div class="flex justify-between items-center">
-        <h2 class="text-3xl font-normal text-white">Postingan</h2>
-    </div>
-
     @if (session('success'))
         <x-admin.alert>{{ session('success') }}</x-admin.alert>
     @endif
@@ -24,7 +20,19 @@
             </thead>
             <tbody class="divide-y divide-slate-800/40">
                 @forelse ($posts as $post)
-                    @php($username = $post->user->name ?? 'Anonim')
+                    @php
+                        $username = $post->user->name ?? 'Anonim';
+
+                        // Menyiapkan array daftar gambar
+                        $imageList = [];
+                        if (!empty($post->images)) {
+                            if (is_array($post->images)) {
+                                $imageList = $post->images;
+                            } else {
+                                $imageList = [$post->images];
+                            }
+                        }
+                    @endphp
                     <tr class="hover:bg-slate-800/20 transition-colors">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
@@ -36,18 +44,27 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3 max-w-lg">
-                                @if ($post->image)
-                                    <button type="button"
-                                        data-src="{{ asset('storage/' . $post->image) }}"
-                                        onclick="openImageModal(this.dataset.src)"
-                                        class="shrink-0 cursor-zoom-in"
-                                        aria-label="Lihat foto postingan">
-                                        <img src="{{ asset('storage/' . $post->image) }}" alt="Foto postingan"
-                                            class="w-6 h-6 rounded-sm object-cover hover:ring-2 hover:ring-[#6C5CE7] transition">
-                                    </button>
+                                <!-- MENAMPILKAN SEMUA GAMBAR POSTINGAN -->
+                                @if (count($imageList) > 0)
+                                    <div class="flex items-center gap-1.5 shrink-0">
+                                        @foreach ($imageList as $img)
+                                            @php
+                                                $imageUrl = str_starts_with($img, 'http') ? $img : asset('storage/' . $img);
+                                            @endphp
+                                            <button type="button"
+                                                data-src="{{ $imageUrl }}"
+                                                onclick="openImageModal(this.dataset.src)"
+                                                class="shrink-0 cursor-zoom-in"
+                                                aria-label="Lihat foto postingan">
+                                                <img src="{{ $imageUrl }}" alt="Foto postingan"
+                                                    class="w-6 h-6 rounded-sm object-cover hover:ring-2 hover:ring-[#6C5CE7] transition">
+                                            </button>
+                                        @endforeach
+                                    </div>
                                 @else
-                                    <span class="w-6 h-6 rounded-sm bg-zinc-300 shrink-0"></span>
+                                    <span class="w-6 h-6 rounded-sm bg-zinc-300/20 shrink-0 border border-slate-700/50"></span>
                                 @endif
+
                                 <span class="truncate">{{ $post->content }}</span>
                             </div>
                         </td>

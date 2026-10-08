@@ -29,7 +29,6 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Validasi input dari form
         $request->validate([
             'username' => ['nullable', 'string', 'max:255'],
             'name'     => ['nullable', 'string', 'max:255'],
@@ -51,11 +50,13 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $user->email_verified_at = now();
+        $user->save();
+
         event(new Registered($user));
 
         Auth::login($user);
 
-        // Langsung redirect ke path '/dashboard' tanpa RouteServiceProvider
-        return redirect('/dashboard');
+        return redirect('/home');
     }
 }

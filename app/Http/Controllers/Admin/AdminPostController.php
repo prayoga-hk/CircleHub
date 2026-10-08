@@ -22,11 +22,18 @@ class AdminPostController extends Controller
      */
     public function destroy(Post $post)
     {
-        $post->delete();
-
-        if ($post->image) {
-            Storage::disk('public')->delete($post->image);
+        if ($post->images) {
+            if (is_array($post->images)) {
+                foreach ($post->images as $imagePath) {
+                    Storage::disk('public')->delete($imagePath);
+                }
+            }
+            else {
+                Storage::disk('public')->delete($post->images);
+            }
         }
+
+        $post->delete();
 
         return back()->with('success', 'Postingan berhasil dihapus.');
     }
