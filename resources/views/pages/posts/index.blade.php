@@ -81,17 +81,18 @@
                     @forelse ($posts as $post)
                         <div class="w-full bg-white/95 dark:bg-[#181920]/95 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-6 shadow-xl transition-colors duration-500 ease-in-out">
                             <x-post-card
-                                :id="$post->id"
-                                :username="$post->user->name ?? 'Anonim'"
-                                :avatar="$post->user->avatar ?? ''"
-                                :time="$post->created_at ? $post->created_at->diffForHumans() : 'Baru saja'"
-                                :title="$post->title"
-                                :content="$post->content"
-                                :images="$post->images"
-                                :likes="is_numeric($post->likes) ? (int)$post->likes : ($post->likes_count ?? $post->likes()->count())"
-                                :comments="is_numeric($post->comments) ? (int)$post->comments : ($post->comments_count ?? $post->comments()->count())"
-                                :isLiked="auth()->check() ? ($post->is_liked_by_user ?? $post->isLikedBy(auth()->id())) : false"
-                            />
+    :id="$post->id"
+    :userId="$post->user->id ?? null"
+    :username="$post->user->name ?? 'Anonim'"
+    :avatar="$post->user->avatar ?? ''"
+    :time="$post->created_at ? $post->created_at->diffForHumans() : 'Baru saja'"
+    :title="$post->title"
+    :content="$post->content"
+    :images="$post->images ?? []"
+    :likes="$post->likes_count ?? 0"
+    :comments="$post->comments_count ?? 0"
+    :isLiked="auth()->check() ? ($post->likes()->where('user_id', auth()->id())->exists()) : false"
+/>
                         </div>
                     @empty
                         <div class="w-full bg-white/95 dark:bg-[#181920]/95 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-8 text-center text-zinc-500 dark:text-zinc-400 shadow-lg transition-colors duration-500 ease-in-out">

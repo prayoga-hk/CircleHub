@@ -1,5 +1,6 @@
 @props([
     'id',
+    'userId' => null,
     'username' => 'Anonim',
     'avatar' => '',
     'time' => 'Baru saja',
@@ -16,6 +17,7 @@
     $commentsCount = is_countable($comments) ? count($comments) : (int) $comments;
     $imagesArray = is_array($images) ? $images : (json_decode($images, true) ?? []);
     $postUrl = route('pages.posts.show', $id);
+    $userUrl = $userId ? route('users.show', $userId) : null;
 @endphp
 
 <div class="space-y-3" x-data="{
@@ -73,22 +75,41 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 
-    {{-- 1. Header Post (User Avatar, Nama & Waktu) --}}
+    {{-- 1. Header Post (User Avatar, Nama & Waktu) — SEKARANG BISA DIKLIK --}}
     <div class="flex items-center justify-between px-1">
-        <div class="flex items-center gap-3">
-            @if (!empty($avatar))
-                <img src="{{ asset('storage/' . $avatar) }}"
-                     alt="{{ $username }}"
-                     class="w-10 h-10 rounded-full object-cover shadow-sm" />
-            @else
-                <div class="w-10 h-10 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-sm shadow-sm">
-                    {{ strtoupper(substr($username, 0, 1)) }}
+        @if($userUrl)
+            <a href="{{ $userUrl }}" class="flex items-center gap-3 group/user">
+                @if (!empty($avatar))
+                    <img src="{{ asset('storage/' . $avatar) }}"
+                         alt="{{ $username }}"
+                         class="w-10 h-10 rounded-full object-cover shadow-sm group-hover/user:ring-2 group-hover/user:ring-indigo-500/50 transition-all" />
+                @else
+                    <div class="w-10 h-10 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-sm shadow-sm group-hover/user:ring-2 group-hover/user:ring-indigo-500/50 transition-all">
+                        {{ strtoupper(substr($username, 0, 1)) }}
+                    </div>
+                @endif
+                <div>
+                    <h4 class="font-bold text-sm text-zinc-900 dark:text-white leading-tight group-hover/user:text-indigo-600 dark:group-hover/user:text-indigo-400 transition-colors">
+                        {{ $username }}
+                    </h4>
                 </div>
-            @endif
-            <div>
-                <h4 class="font-bold text-sm text-zinc-900 dark:text-white leading-tight">{{ $username }}</h4>
+            </a>
+        @else
+            <div class="flex items-center gap-3">
+                @if (!empty($avatar))
+                    <img src="{{ asset('storage/' . $avatar) }}"
+                         alt="{{ $username }}"
+                         class="w-10 h-10 rounded-full object-cover shadow-sm" />
+                @else
+                    <div class="w-10 h-10 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-sm shadow-sm">
+                        {{ strtoupper(substr($username, 0, 1)) }}
+                    </div>
+                @endif
+                <div>
+                    <h4 class="font-bold text-sm text-zinc-900 dark:text-white leading-tight">{{ $username }}</h4>
+                </div>
             </div>
-        </div>
+        @endif
         <p class="text-xs text-zinc-400 dark:text-zinc-500">{{ $time }}</p>
     </div>
 
@@ -168,7 +189,7 @@
         </div>
     @endif
 
-    {{-- 5. Baris Ikon Interaksi (dipindah ke paling bawah) --}}
+    {{-- 5. Baris Ikon Interaksi --}}
     <div class="flex items-center gap-5 pt-2 px-1">
 
         {{-- TOMBOL LIKE --}}

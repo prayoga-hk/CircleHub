@@ -11,9 +11,8 @@ class UserProfileController extends Controller
      */
     public function show(User $user)
     {
-        // Ambil semua postingan user ini, beserta gambar & user
         $posts = $user->posts()
-            ->with(['images', 'user'])
+            ->with(['user']) // hanya load 'user', relasi yang pasti ada
             ->latest()
             ->get();
 
