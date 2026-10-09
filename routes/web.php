@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\StatisticController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -60,11 +61,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pages/notification/{id}/read', [NotificationController::class, 'read'])->name('pages.notification.read');
     Route::post('/pages/notification/read-all', [NotificationController::class, 'readAll'])->name('pages.notification.readAll');
 
-    // Profile
+    // Profile (milik sendiri)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Profile Publik (user lain)
+    Route::get('/users/{user}', [UserProfileController::class, 'show'])->name('users.show');
 
     /*
     |--------------------------------------------------------------------------

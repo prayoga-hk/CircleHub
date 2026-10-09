@@ -21,6 +21,7 @@ class User extends Authenticatable
         'password',
         'role',
         'bio',
+        'avatar', // <- ditambahkan supaya upload avatar bisa disimpan
     ];
 
     /**
@@ -44,5 +45,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Relasi: User punya banyak Post
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
     }
 }

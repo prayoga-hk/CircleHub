@@ -86,7 +86,7 @@
                             :time="$post->created_at ? $post->created_at->diffForHumans() : 'Baru saja'"
                             :title="$post->title ?? ''"
                             :content="$post->caption ?? $post->body ?? $post->content ?? ''"
-                            :images="$post->image ? [$post->image] : []"
+                            :images="$post->images ?? []"
                             :likes="$post->likes_count ?? 0"
                             :comments="$post->comments_count ?? 0"
                             :isLiked="auth()->check() ? ($post->likes()->where('user_id', auth()->id())->exists()) : false"

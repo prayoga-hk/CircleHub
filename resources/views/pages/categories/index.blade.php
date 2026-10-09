@@ -47,7 +47,7 @@
             {{-- Theme Toggle Button --}}
             <button id="theme-toggle" type="button" aria-label="Toggle Theme" class="absolute top-6 right-8 z-50 p-3 rounded-full bg-white/80 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/80 dark:border-zinc-700/80 shadow-lg backdrop-blur-md hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">
                 <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 fill-current" viewBox="0 0 20 20">
-                    <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 2.78a1 1 0 011.415 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zm2.78 4.22a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-4.22 5.657a1 1 0 010 1.415l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM4.78 14.22a1 1 0 010-1.414l.707-.707a1 1 0 011.414 1.414l-.707.707a1 1 0 01-1.414 0zM2 10a1 1 0 011-1h1a1 1 0 110 2H3a1 1 0 01-1-1zm2.78-5.657a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM10 6a4 4 0 100 8 4 4 0 000-8z" />
+                    <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 2.78a1 1 0 011.415 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zm2.78 4.22a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-4.22 5.657a1 1 0 010 1.415l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM4.78 14.22a1 1 0 010-1.414l.707.707a1 1 0 011.414 1.414l.707.707a1 1 0 01-1.414 0zM2 10a1 1 0 011-1h1a1 1 0 110 2H3a1 1 0 01-1-1zm2.78-5.657a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM10 6a4 4 0 100 8 4 4 0 000-8z" />
                 </svg>
                 <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 fill-current" viewBox="0 0 20 20">
                     <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
@@ -100,24 +100,29 @@
                          x-transition
                          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @forelse ($categories as $cat)
-                            <div x-show="searchQuery === '' || '{{ strtolower($cat->name) }}'.includes(searchQuery.toLowerCase())"
-                                 class="bg-white/85 dark:bg-[#181920]/85 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                            <a href="{{ route('pages.categories.show', $cat->id) }}"
+                               x-show="searchQuery === '' || '{{ strtolower($cat->name) }}'.includes(searchQuery.toLowerCase())"
+                               class="block bg-white/85 dark:bg-[#181920]/85 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-6 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group cursor-pointer">
+
                                 <div class="flex items-center gap-4">
-                                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-black text-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                                        {{ strtoupper(substr($cat->name, 0, 1)) }}
+                                    {{-- FOTO PROFIL KATEGORI --}}
+                                    <div class="w-14 h-14 rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-black text-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform shrink-0">
+                                        @if($cat->image_url)
+                                            <img src="{{ $cat->image_url }}"
+                                                 alt="{{ $cat->name }}"
+                                                 class="w-full h-full object-cover">
+                                        @else
+                                            {{ strtoupper(substr($cat->name, 0, 1)) }}
+                                        @endif
                                     </div>
-                                    <div>
-                                        <h3 class="font-bold text-lg text-zinc-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{{ $cat->name }}</h3>
-                                        <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{{ $cat->posts_count ?? $cat->users_count ?? 0 }} Postingan</p>
+
+                                    <div class="min-w-0">
+                                        <h3 class="font-bold text-lg text-zinc-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">{{ $cat->name }}</h3>
+                                        <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{{ $cat->posts_count ?? 0 }} Anggota</p>
                                     </div>
                                 </div>
-                                <div class="mt-6 pt-4 border-t border-zinc-200/60 dark:border-zinc-800/60 flex items-center justify-between">
-                                    <span class="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 px-3 py-1 rounded-full">Komunitas</span>
-                                    <a href="{{ route('pages.categories.show', $cat->id) }}" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs transition-all shadow-md hover:shadow-indigo-500/30">
-                                        Lihat
-                                    </a>
-                                </div>
-                            </div>
+
+                            </a>
                         @empty
                             <div class="col-span-full bg-white/80 dark:bg-[#181920]/80 backdrop-blur-md rounded-3xl p-8 text-center text-zinc-500">
                                 Belum ada kategori tersedia.
@@ -130,21 +135,29 @@
                          x-transition
                          class="space-y-4">
                         @forelse ($categories as $cat)
-                            <div x-show="searchQuery === '' || '{{ strtolower($cat->name) }}'.includes(searchQuery.toLowerCase())"
-                                 class="bg-white/85 dark:bg-[#181920]/85 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 flex items-center justify-between group">
+                            <a href="{{ route('pages.categories.show', $cat->id) }}"
+                               x-show="searchQuery === '' || '{{ strtolower($cat->name) }}'.includes(searchQuery.toLowerCase())"
+                               class="block bg-white/85 dark:bg-[#181920]/85 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer">
+
                                 <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold text-lg flex items-center justify-center shadow-md">
-                                        {{ strtoupper(substr($cat->name, 0, 1)) }}
+                                    {{-- FOTO PROFIL KATEGORI --}}
+                                    <div class="w-12 h-12 rounded-xl overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold text-lg flex items-center justify-center shadow-md shrink-0">
+                                        @if($cat->image_url)
+                                            <img src="{{ $cat->image_url }}"
+                                                 alt="{{ $cat->name }}"
+                                                 class="w-full h-full object-cover">
+                                        @else
+                                            {{ strtoupper(substr($cat->name, 0, 1)) }}
+                                        @endif
                                     </div>
-                                    <div>
-                                        <h3 class="font-bold text-base text-zinc-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{{ $cat->name }}</h3>
-                                        <p class="text-xs text-zinc-500 dark:text-zinc-400">{{ $cat->posts_count ?? $cat->users_count ?? 0 }} Anggota</p>
+
+                                    <div class="min-w-0">
+                                        <h3 class="font-bold text-base text-zinc-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">{{ $cat->name }}</h3>
+                                        <p class="text-xs text-zinc-500 dark:text-zinc-400">{{ $cat->posts_count ?? 0 }} Anggota</p>
                                     </div>
                                 </div>
-                                <a href="{{ route('pages.categories.show', $cat->id) }}" class="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs transition-all shadow-md">
-                                    Lihat
-                                </a>
-                            </div>
+
+                            </a>
                         @empty
                             <div class="bg-white/80 dark:bg-[#181920]/80 backdrop-blur-md rounded-3xl p-8 text-center text-zinc-500">
                                 Belum ada kategori tersedia.
