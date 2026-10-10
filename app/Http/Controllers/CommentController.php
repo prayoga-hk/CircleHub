@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
 use App\Models\Post;
 use App\Models\Comment;
 use App\Notifications\PostCommented;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CommentController extends Controller
 {
@@ -21,11 +23,20 @@ class CommentController extends Controller
             'body'    => $request->body,
         ]);
 
+        Activity::create([
+            'user_id'   => auth()->id(),
+            'type'      => 'comment',
+            'target_id' => $post->id,
+            'metadata'  => [
+                'post_title' => $post->title,
+                'body'       => Str::limit($comment->body, 80),
+            ],
+        ]);
+
         if ($post->user_id !== auth()->id()) {
             $post->user->notify(new PostCommented($post, auth()->user(), $comment));
         }
 
-        // ⬇️ TAMBAHKAN BLOK INI ⬇️
         if ($request->expectsJson()) {
             $comment->load('user');
             return response()->json([
@@ -39,7 +50,6 @@ class CommentController extends Controller
             ]);
         }
 
-        // Fallback untuk submit form biasa (tanpa JS)
         return back()->with('success', 'Komentar berhasil dikirim!');
     }
 }

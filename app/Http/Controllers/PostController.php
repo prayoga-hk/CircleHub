@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
 use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -10,16 +11,11 @@ use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
-    /**
-     * Menampilkan daftar postingan di beranda dengan Fitur Pencarian
-     * (Mencakup pencarian berdasarkan Username, Judul, dan Konten)
-     */
     public function index(Request $request)
     {
         $query = Post::with(['user', 'category'])
             ->withCount(['likes', 'comments']);
 
-        // Filter pencarian jika terdapat query search
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -33,7 +29,6 @@ class PostController extends Controller
 
         $posts = $query->latest()->get();
 
-        // Mengecek apakah postingan sudah di-like oleh user yang sedang login
         if (auth()->check()) {
             $userId = auth()->id();
             $posts->each(function ($post) use ($userId) {
@@ -44,9 +39,6 @@ class PostController extends Controller
         return view('pages.posts.index', compact('posts'));
     }
 
-    /**
-     * Menampilkan form untuk membuat postingan baru
-     */
     public function create()
     {
         $categories = Category::all();
@@ -73,11 +65,10 @@ class PostController extends Controller
             }
         }
 
-        // Generate slug unik berbasis judul atau konten jika judul kosong
         $titleForSlug = $request->title ?: Str::limit($request->content, 20, '');
         $slug = Str::slug($titleForSlug) . '-' . Str::random(5);
 
-        Post::create([
+        $post = Post::create([
             'user_id'     => auth()->id(),
             'category_id' => $request->category_id,
             'title'       => $request->title,
@@ -86,12 +77,18 @@ class PostController extends Controller
             'images'      => $imagePaths,
         ]);
 
+        Activity::create([
+            'user_id'   => auth()->id(),
+            'type'      => 'post',
+            'target_id' => $post->id,
+            'metadata'  => [
+                'title' => $post->title ?: Str::limit($post->content, 60),
+            ],
+        ]);
+
         return redirect()->route('pages.posts.index')->with('success', 'Postingan berhasil dibuat!');
     }
 
-    /**
-     * Menampilkan detail postingan beserta komentar
-     */
     public function show(Post $post)
     {
         $post->load(['user', 'category', 'comments.user']);
@@ -105,28 +102,34 @@ class PostController extends Controller
     }
 
     /**
-     * Fitur Toggle Like / Unlike Postingan (Mendukung Request Biasa & AJAX/Fetch)
+     * Fitur Toggle Like / Unlike Postingan
      */
     public function toggleLike(Post $post)
     {
         $userId = auth()->id();
 
-        // Mengecek apakah user sudah menyukai postingan ini
         $existingLike = $post->likes()->where('user_id', $userId)->first();
 
         if ($existingLike) {
-            // Jika sudah di-like, hapus (Unlike)
             $existingLike->delete();
             $isLiked = false;
+
         } else {
-            // Jika belum di-like, tambahkan ke tabel likes
             $post->likes()->create([
                 'user_id' => $userId,
             ]);
             $isLiked = true;
+
+            Activity::create([
+                'user_id'   => $userId,
+                'type'      => 'like',
+                'target_id' => $post->id,
+                'metadata'  => [
+                    'post_title' => $post->title ?: Str::limit($post->content, 60),
+                ],
+            ]);
         }
 
-        // Respons JSON jika dipanggil via Fetch API / AJAX (agar tidak reload halaman)
         if (request()->wantsJson() || request()->ajax()) {
             return response()->json([
                 'success'    => true,

@@ -79,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Statistik
         Route::get('/statistik', [StatisticController::class, 'index'])->name('statistics.index');
+        Route::get('/statistik/data', [StatisticController::class, 'data'])->name('statistics.data');
 
         // User Management
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
