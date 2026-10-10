@@ -13,7 +13,7 @@ class Post extends Model
         'user_id',
         'category_id',
         'title',
-        'slug', // Ditambahkan agar slug bisa disimpan melalui Post::create()
+        'slug',
         'content',
         'images',
     ];
