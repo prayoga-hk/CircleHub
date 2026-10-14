@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
@@ -374,80 +373,17 @@
         <section id="tentang-kami" class="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-20">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-                <!-- MOCKUP DASHBOARD -->
+                <!-- GAMBAR CATEGORIES -->
                 <div class="relative min-w-0">
                     <div class="absolute inset-5 rounded-3xl bg-violet-600/20 blur-[65px]"></div>
 
-                    <div class="relative glass-card rounded-2xl sm:rounded-3xl p-3 sm:p-5">
-                        <div class="flex items-center justify-between px-2 pb-4 border-b border-white/[0.07]">
-                            <div class="flex items-center gap-2">
-                                <span class="text-violet-400 text-lg">✦</span>
-                                <span class="font-bold text-sm">CircleHub</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                <span class="text-[10px] text-gray-400">Community space</span>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-[85px_minmax(0,1fr)] sm:grid-cols-[115px_minmax(0,1fr)] gap-3 pt-4">
-                            <aside class="dashboard-sidebar rounded-xl p-2 space-y-2 text-[10px] text-gray-400">
-                                <div class="dashboard-active rounded-lg p-2 text-violet-200">⌂ Beranda</div>
-                                <div class="rounded-lg p-2">◉ Komunitas</div>
-                                <div class="rounded-lg p-2">▤ Postingan</div>
-                                <div class="rounded-lg p-2">♡ Disukai</div>
-                                <div class="rounded-lg p-2">♙ Profil</div>
-                            </aside>
-
-                            <div class="min-w-0 space-y-4">
-                                <div class="flex items-center justify-between gap-2">
-                                    <div class="bg-[#0B0F19] border border-white/[0.06] rounded-lg px-3 py-2 text-[10px] text-gray-500 flex-1">
-                                        🔎 Cari komunitas...
-                                    </div>
-                                    <div class="w-8 h-8 rounded-lg bg-violet-500/20 flex items-center justify-center">🔔</div>
-                                </div>
-
-                                <div class="rounded-xl overflow-hidden border border-violet-400/20 bg-gradient-to-r from-violet-900/50 to-[#111827] p-3 sm:p-4">
-                                    <p class="text-[10px] text-violet-300 mb-1">KOMUNITAS PILIHAN</p>
-                                    <div class="flex items-center justify-between gap-2">
-                                        <div>
-                                            <h3 class="text-xs sm:text-sm font-bold text-white">Gaming Community</h3>
-                                            <p class="text-[10px] text-gray-400 mt-1">Bermain · Diskusi · Teman baru</p>
-                                        </div>
-                                        <span class="text-2xl">🎮</span>
-                                    </div>
-                                    <div class="mt-3 inline-flex rounded-lg primary-button px-3 py-1.5 text-[10px] font-semibold">
-                                        Temukan komunitas
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 class="text-xs font-semibold mb-3">Rekomendasi Hobi</h3>
-                                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                        <div class="rounded-xl border border-white/[0.07] bg-[#0B0F19]/70 p-2.5">
-                                            <div class="rounded-lg bg-gradient-to-br from-violet-500/30 to-pink-500/20 h-12 flex items-center justify-center text-2xl">🌸</div>
-                                            <p class="text-[10px] font-semibold mt-2">Anime Lovers</p>
-                                            <p class="text-[9px] text-gray-500 mt-1">Berbagi kesukaan</p>
-                                        </div>
-                                        <div class="rounded-xl border border-white/[0.07] bg-[#0B0F19]/70 p-2.5">
-                                            <div class="rounded-lg bg-gradient-to-br from-blue-500/30 to-cyan-500/20 h-12 flex items-center justify-center text-2xl">📷</div>
-                                            <p class="text-[10px] font-semibold mt-2">Photography</p>
-                                            <p class="text-[9px] text-gray-500 mt-1">Berburu momen</p>
-                                        </div>
-                                        <div class="hidden sm:block rounded-xl border border-white/[0.07] bg-[#0B0F19]/70 p-2.5">
-                                            <div class="rounded-lg bg-gradient-to-br from-pink-500/30 to-purple-500/20 h-12 flex items-center justify-center text-2xl">🎵</div>
-                                            <p class="text-[10px] font-semibold mt-2">Music Vibes</p>
-                                            <p class="text-[9px] text-gray-500 mt-1">Berbagi musik</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-4 pt-3 border-t border-white/[0.07] flex items-center justify-between text-[10px] text-gray-500">
-                            <span>Temukan circle-mu.</span>
-                            <span class="text-cyan-300">Explore together ↗</span>
-                        </div>
+                    <div class="relative glass-card rounded-2xl sm:rounded-3xl p-3 sm:p-5 overflow-hidden">
+                        <img
+                            src="{{ asset('images/categories.jpg') }}"
+                            alt="Kategori komunitas di CircleHub"
+                            loading="lazy"
+                            class="w-full h-auto object-cover rounded-xl sm:rounded-2xl"
+                        >
                     </div>
 
                     <div class="hidden sm:block absolute -left-4 bottom-12 glass-card rounded-xl px-4 py-3">
