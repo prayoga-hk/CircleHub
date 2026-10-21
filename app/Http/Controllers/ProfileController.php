@@ -11,28 +11,22 @@ use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
 {
-    /**
-     * Tampilkan halaman profil user.
-     */
     public function edit(Request $request)
     {
-        return view('profile.edit', [
+        return view('profile.profile', [
             'user' => $request->user(),
         ]);
     }
 
-    /**
-     * Update data profil user (Username, Email, Bio, Avatar).
-     */
     public function update(Request $request)
     {
         $user = $request->user();
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'bio' => ['nullable', 'string', 'max:500'],
-            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'], // Maksimal 2MB
+            'name'   => ['required', 'string', 'max:255'],
+            'email'  => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'bio'    => ['nullable', 'string', 'max:500'],
+            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
         if ($request->hasFile('avatar')) {
@@ -49,9 +43,9 @@ class ProfileController extends Controller
         }
 
         $user->fill([
-            'name' => $validated['name'],
+            'name'  => $validated['name'],
             'email' => $validated['email'],
-            'bio' => $validated['bio'] ?? null,
+            'bio'   => $validated['bio'] ?? null,
         ]);
 
         $user->save();
@@ -59,14 +53,11 @@ class ProfileController extends Controller
         return redirect()->route('profile.edit')->with('status', 'profile-updated');
     }
 
-    /**
-     * Update password user.
-     */
     public function updatePassword(Request $request)
     {
         $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
+            'password'         => ['required', Password::defaults(), 'confirmed'],
         ]);
 
         $request->user()->update([
@@ -76,15 +67,8 @@ class ProfileController extends Controller
         return redirect()->route('profile.edit')->with('status', 'password-updated');
     }
 
-    /**
-     * Hapus akun user beserta avatar.
-     */
     public function destroy(Request $request)
     {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
-
         $user = $request->user();
 
         if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
