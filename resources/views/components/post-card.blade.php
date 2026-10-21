@@ -223,9 +223,27 @@
         </div>
     @endif
 
+    {{-- BAGIAN KONTEN / CAPTION DENGAN FITUR READ MORE --}}
     @if (!empty($content))
-        <div class="px-1 text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed prose dark:prose-invert prose-p:text-zinc-800 dark:prose-p:text-zinc-200 prose-headings:text-zinc-900 dark:prose-headings:text-white max-w-none">
-            {!! \Illuminate\Support\Str::markdown($content) !!}
+        <div x-data="{ expanded: false }" class="px-1 text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed prose dark:prose-invert prose-p:text-zinc-800 dark:prose-p:text-zinc-200 prose-headings:text-zinc-900 dark:prose-headings:text-white max-w-none relative">
+            
+            {{-- Konten dengan batasan tinggi --}}
+            <div class="transition-all duration-300 overflow-hidden break-words"
+                 x-bind:class="expanded ? '' : 'max-h-[5rem]'">
+                {!! \Illuminate\Support\Str::markdown($content) !!}
+            </div>
+
+            {{-- Tombol Lihat Selengkapnya --}}
+            {{-- Hanya muncul jika panjang teks lebih dari 180 karakter --}}
+            @if(strlen(strip_tags($content)) > 180)
+                <button 
+                    type="button"
+                    @click="expanded = !expanded" 
+                    class="text-sm font-semibold text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 mt-1 inline-block cursor-pointer focus:outline-none"
+                    x-text="expanded ? 'Tampilkan lebih sedikit' : 'Lihat selengkapnya'"
+                >
+                </button>
+            @endif
         </div>
     @endif
 
