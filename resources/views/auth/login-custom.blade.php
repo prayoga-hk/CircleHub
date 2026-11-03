@@ -134,7 +134,7 @@
 
                     <div class="flex items-center justify-between">
                         <label for="remember_me" class="inline-flex items-center cursor-pointer">
-                            <input id="remember_me" type="checkbox" class="rounded bg-[#0b1120] border-slate-700 text-[#6C5CE7] shadow-sm focus:ring-[#6C5CE7]" name="remember">
+                            <input id="remember_me" type="checkbox" name="remember" value="1" class="rounded bg-[#0b1120] border-slate-700 text-[#6C5CE7] shadow-sm focus:ring-[#6C5CE7]" name="remember">
                             <span class="ms-2 text-xs text-slate-400">Ingat saya</span>
                         </label>
                     </div>
