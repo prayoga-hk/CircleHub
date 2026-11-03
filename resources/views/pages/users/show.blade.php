@@ -20,7 +20,7 @@
     </style>
 </head>
 <body class="h-screen w-screen overflow-hidden flex flex-col m-0 p-0 bg-white dark:bg-[#121214] transition-colors duration-500 ease-in-out">
-
+<x-custom-cursor />
     <div class="relative z-30">
         <x-navbar />
     </div>

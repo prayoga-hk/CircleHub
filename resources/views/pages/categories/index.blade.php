@@ -26,7 +26,7 @@
           viewMode: 'grid',
           searchQuery: ''
       }">
-
+<x-custom-cursor />
     {{-- Navbar Utama --}}
     <div class="relative z-30">
         <x-navbar />

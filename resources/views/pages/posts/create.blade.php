@@ -17,7 +17,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-100 text-zinc-900 dark:bg-[#000816] dark:text-zinc-300 h-screen overflow-hidden transition-colors duration-200">
-    
+    <x-custom-cursor />
     <!-- Navbar Atas -->
     <x-navbar />
 

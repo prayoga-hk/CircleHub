@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
@@ -54,7 +55,6 @@
             background: var(--bg);
             color: var(--text);
             overflow-x: hidden;
-            /* Hanya body yang ditransisikan untuk warna background & teks utama */
             transition: background-color 0.15s ease, color 0.15s ease;
         }
 
@@ -67,12 +67,145 @@
             outline-offset: 4px;
         }
 
-        /* Header & Footer transisi cepat */
+        /* ===== CUSTOM CURSOR ===== */
+        @media (pointer: fine) {
+            body, a, button, input, textarea, select, [role="button"] {
+                cursor: none !important;
+            }
+        }
+
+        .custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--violet), var(--cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 16px;
+            pointer-events: none;
+            z-index: 999999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out, width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.6), 0 0 30px rgba(34, 211, 238, 0.3);
+            mix-blend-mode: difference;
+            opacity: 0;
+        }
+
+        .custom-cursor-trail {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--cyan);
+            pointer-events: none;
+            z-index: 999998;
+            transform: translate(-50%, -50%);
+            transition: transform 0.15s ease-out, opacity 0.3s ease;
+            opacity: 0;
+            box-shadow: 0 0 10px var(--cyan);
+        }
+
+        .custom-cursor.hovering {
+            width: 48px;
+            height: 48px;
+            font-size: 22px;
+            background: linear-gradient(135deg, var(--cyan), var(--violet));
+            box-shadow: 0 0 25px rgba(34, 211, 238, 0.8), 0 0 50px rgba(139, 92, 246, 0.5);
+        }
+
+        @media (pointer: coarse) {
+            .custom-cursor, .custom-cursor-trail {
+                display: none !important;
+            }
+        }
+
+        /* ===== SPLASH SCREEN ===== */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 9999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #splash-screen.hidden-splash {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .splash-logo {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            animation: splashPulse 1.5s ease-in-out infinite;
+        }
+
+        .splash-title {
+            margin-top: 1rem;
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            animation: splashFadeIn 1s ease-out;
+        }
+
+        .splash-title span {
+            background: linear-gradient(100deg, #A78BFA 0%, #7567FF 48%, #38BDF8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .splash-progress-container {
+            margin-top: 2rem;
+            width: 200px;
+            height: 4px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 9999px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .splash-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--violet), var(--cyan));
+            border-radius: 9999px;
+            box-shadow: 0 0 10px var(--cyan);
+            transition: width 0.3s ease;
+        }
+
+        @keyframes splashPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.85; }
+        }
+
+        @keyframes splashFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header & Footer */
         header, footer {
             transition: background-color 0.15s ease, border-color 0.15s ease;
         }
 
-        /* Glass card: hanya transisi background & border, tidak semua properti */
+        /* Glass card */
         .glass-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -86,12 +219,10 @@
             box-shadow: 0 15px 40px rgba(80, 70, 229, .12);
         }
 
-        /* Text warna ikut transisi via color saja */
         h1, h2, h3, p, a, span, .text-white {
             transition: color 0.15s ease;
         }
 
-        /* ===== Background Glow ===== */
         .page-glow {
             position: absolute;
             width: 360px;
@@ -185,7 +316,6 @@
         .footer-link { transition: color .2s ease; }
         .footer-link:hover { color: #A78BFA; }
 
-        /* ===== Theme Toggle ===== */
         .theme-toggle {
             width: 40px;
             height: 40px;
@@ -212,7 +342,6 @@
             border-color: #8B5CF6;
         }
 
-        /* ===== Scroll Reveal ===== */
         .reveal {
             opacity: 0;
             transform: translateY(40px);
@@ -278,6 +407,20 @@
 
 <body class="min-h-screen antialiased">
 
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen">
+        <img src="https://cdn.phototourl.com/member/2026-10-08-0243e666-f2a5-4124-b999-48635e9aaff4.png" alt="Logo CircleHub" class="splash-logo">
+        <h1 class="splash-title">Circle<span>Hub</span></h1>
+        <div class="splash-progress-container">
+            <div class="splash-progress-bar" id="splash-progress"></div>
+        </div>
+    </div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="custom-cursor" id="custom-cursor">C</div>
+    <div class="custom-cursor-trail" id="custom-cursor-trail"></div>
+
+    <!-- BACKGROUND DECORATION -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden -z-10">
         <div class="page-glow glow-purple" style="top: 0; right: -120px;"></div>
         <div class="page-glow glow-blue" style="top: 700px; left: -180px;"></div>
@@ -614,28 +757,84 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
-            const button = document.getElementById('mobile-menu-button');
-            const menu = document.getElementById('mobile-menu');
+            // ==========================================
+            // 1. SPLASH SCREEN LOGIC
+            // ==========================================
+            const splash = document.getElementById('splash-screen');
+            const progressBar = document.getElementById('splash-progress');
+            
+            if (splash && progressBar) {
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 20;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        
+                        setTimeout(() => {
+                            splash.classList.add('hidden-splash');
+                        }, 300);
+                    }
+                    progressBar.style.width = progress + '%';
+                }, 100);
+            }
 
-            if (button && menu) {
-                button.addEventListener('click', function () {
-                    const isHidden = menu.classList.contains('hidden');
-                    menu.classList.toggle('hidden', !isHidden);
-                    button.setAttribute('aria-expanded', String(isHidden));
-                    button.setAttribute('aria-label', isHidden ? 'Tutup menu navigasi' : 'Buka menu navigasi');
-                    button.textContent = isHidden ? '✕' : '☰';
+            // ==========================================
+            // 2. CUSTOM CURSOR LOGIC
+            // ==========================================
+            const cursor = document.getElementById('custom-cursor');
+            const trail = document.getElementById('custom-cursor-trail');
+            const isFinePointer = window.matchMedia('(pointer: fine)').matches;
+
+            if (cursor && trail && isFinePointer) {
+                let mouseX = 0, mouseY = 0;
+                let cursorX = 0, cursorY = 0;
+                let trailX = 0, trailY = 0;
+
+                document.addEventListener('mousemove', (e) => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                    
+                    if (cursor.style.opacity === '' || cursor.style.opacity === '0') {
+                        cursor.style.opacity = '1';
+                        trail.style.opacity = '0.6';
+                    }
                 });
 
-                menu.querySelectorAll('a').forEach(function (link) {
-                    link.addEventListener('click', function () {
-                        menu.classList.add('hidden');
-                        button.setAttribute('aria-expanded', 'false');
-                        button.setAttribute('aria-label', 'Buka menu navigasi');
-                        button.textContent = '☰';
-                    });
+                function animateCursor() {
+                    cursorX += (mouseX - cursorX) * 0.2;
+                    cursorY += (mouseY - cursorY) * 0.2;
+                    cursor.style.left = cursorX + 'px';
+                    cursor.style.top = cursorY + 'px';
+
+                    trailX += (mouseX - trailX) * 0.1;
+                    trailY += (mouseY - trailY) * 0.1;
+                    trail.style.left = trailX + 'px';
+                    trail.style.top = trailY + 'px';
+
+                    requestAnimationFrame(animateCursor);
+                }
+                animateCursor();
+
+                const interactiveElements = document.querySelectorAll('a, button, input, textarea, select, [role="button"]');
+                interactiveElements.forEach(el => {
+                    el.addEventListener('mouseenter', () => { cursor.classList.add('hovering'); });
+                    el.addEventListener('mouseleave', () => { cursor.classList.remove('hovering'); });
+                });
+
+                document.addEventListener('mouseleave', () => {
+                    cursor.style.opacity = '0';
+                    trail.style.opacity = '0';
+                });
+                document.addEventListener('mouseenter', () => {
+                    cursor.style.opacity = '1';
+                    trail.style.opacity = '0.6';
                 });
             }
 
+            // ==========================================
+            // 3. THEME TOGGLE LOGIC
+            // ==========================================
             const themeToggle = document.getElementById('theme-toggle');
             const themeIcon = document.getElementById('theme-icon');
             const htmlEl = document.documentElement;
@@ -661,6 +860,34 @@
                 });
             }
 
+            // ==========================================
+            // 4. MOBILE MENU
+            // ==========================================
+            const button = document.getElementById('mobile-menu-button');
+            const menu = document.getElementById('mobile-menu');
+
+            if (button && menu) {
+                button.addEventListener('click', function () {
+                    const isHidden = menu.classList.contains('hidden');
+                    menu.classList.toggle('hidden', !isHidden);
+                    button.setAttribute('aria-expanded', String(isHidden));
+                    button.setAttribute('aria-label', isHidden ? 'Tutup menu navigasi' : 'Buka menu navigasi');
+                    button.textContent = isHidden ? '✕' : '☰';
+                });
+
+                menu.querySelectorAll('a').forEach(function (link) {
+                    link.addEventListener('click', function () {
+                        menu.classList.add('hidden');
+                        button.setAttribute('aria-expanded', 'false');
+                        button.setAttribute('aria-label', 'Buka menu navigasi');
+                        button.textContent = '☰';
+                    });
+                });
+            }
+
+            // ==========================================
+            // 5. SCROLL REVEAL
+            // ==========================================
             const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom');
 
             if ('IntersectionObserver' in window) {

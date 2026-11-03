@@ -38,7 +38,7 @@
     </style>
 </head>
 <body class="bg-gray-100 text-zinc-900 dark:bg-[#000816] dark:text-zinc-100 h-screen w-screen overflow-hidden flex flex-col m-0 p-0 transition-colors duration-200">
-
+<x-custom-cursor />
     <x-navbar />
 
     {{-- Toast Notification --}}
