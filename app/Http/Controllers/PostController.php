@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -36,7 +37,15 @@ class PostController extends Controller
             });
         }
 
-        return view('pages.posts.index', compact('posts'));
+        // AMBIL DATA POPULER MEMBER (Berdasarkan total likes dari semua postingannya)
+        $popularMembers = User::withCount(['posts as likes_count' => function ($query) {
+            $query->join('likes', 'posts.id', '=', 'likes.post_id');
+        }])
+        ->orderByDesc('likes_count')
+        ->take(5)
+        ->get();
+
+        return view('pages.posts.index', compact('posts', 'popularMembers'));
     }
 
     public function create()

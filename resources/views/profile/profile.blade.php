@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CircleHub - Pengaturan Akun</title>
 
+    {{-- Script pencegah flicker saat tema dimuat --}}
     <script>
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
@@ -13,20 +14,22 @@
         }
     </script>
 
+    {{-- Pemanggilan Tailwind CSS & JS Lokal via Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style> body { font-family: 'Inter', sans-serif; } </style>
 </head>
-<body class="bg-gray-100 text-zinc-900 dark:bg-[#000816] dark:text-zinc-100 h-screen w-screen overflow-hidden flex flex-col m-0 p-0 transition-colors duration-200">
-<x-custom-cursor />
+<body class="bg-gray-100 text-zinc-900 dark:bg-[#000816] dark:text-zinc-100 h-screen w-full overflow-hidden flex flex-col m-0 p-0 transition-colors duration-200">
+    <x-custom-cursor />
     <x-navbar />
 
     <div class="flex flex-1 w-full overflow-hidden relative">
         <x-sidebar />
 
-        <main class="flex-1 relative overflow-y-auto p-8 transition-colors duration-200 bg-slate-50 dark:bg-[#000816]">
+        <main class="flex-1 relative overflow-y-auto p-8 transition-colors duration-200 bg-slate-50 dark:bg-[#000816] w-full">
 
-            <button id="theme-toggle" type="button" class="fixed top-20 right-8 z-50 p-3 rounded-full bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 shadow-md hover:scale-105 transition-all cursor-pointer">
+            {{-- Tombol Toggle Dark / Light Mode --}}
+            <button id="theme-toggle" type="button" aria-label="Toggle Theme" class="fixed top-20 right-8 z-50 p-3 rounded-full bg-white/80 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/80 dark:border-zinc-700/80 shadow-lg backdrop-blur-md hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer">
                 <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 fill-current" viewBox="0 0 20 20">
                     <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 2.78a1 1 0 011.415 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zm2.78 4.22a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-4.22 5.657a1 1 0 010 1.415l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM4.78 14.22a1 1 0 010-1.414l.707.707a1 1 0 011.414 1.414l.707.707a1 1 0 01-1.414 0zM2 10a1 1 0 011-1h1a1 1 0 110 2H3a1 1 0 01-1-1zm2.78-5.657a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM10 6a4 4 0 100 8 4 4 0 000-8z" />
                 </svg>
@@ -45,20 +48,22 @@
 
             <h2 class="text-2xl font-bold mb-6 text-zinc-900 dark:text-white transition-colors duration-200">Pengaturan Akun</h2>
 
+            {{-- Pesan Sukses Notification --}}
             @if (session('status') === 'profile-updated')
-                <div class="max-w-6xl mb-4 p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-sm">
+                <div class="w-full mb-4 p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-sm">
                     Profil berhasil diperbarui!
                 </div>
             @endif
 
             @if (session('status') === 'password-updated')
-                <div class="max-w-6xl mb-4 p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-sm">
+                <div class="w-full mb-4 p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-sm">
                     Password berhasil diperbarui!
                 </div>
             @endif
 
+            {{-- Pesan Error Validasi --}}
             @if ($errors->any())
-                <div class="max-w-6xl mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm">
+                <div class="w-full mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm">
                     <ul class="list-disc list-inside space-y-0.5">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -67,12 +72,17 @@
                 </div>
             @endif
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl">
+            {{-- ========================================================================= --}}
+            {{-- GRID UTAMA 3 KOLOM SEJAJAR --}}
+            {{-- ========================================================================= --}}
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full items-start">
 
-                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="lg:col-span-2 bg-white dark:bg-[#212529] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 space-y-6 transition-colors duration-200 shadow-sm">
+                {{-- KOLOM 1: Form Profil Utama --}}
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="bg-white dark:bg-[#212529] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 space-y-5 transition-colors duration-200 shadow-sm">
                     @csrf
                     @method('patch')
 
+                    {{-- Header Profile Pic + Tombol Pensil Aktif --}}
                     <div class="flex items-center justify-between pb-4 border-b border-zinc-100 dark:border-zinc-800">
                         <div class="relative group">
                             <div class="w-20 h-20 rounded-full overflow-hidden bg-indigo-600 text-white dark:bg-zinc-300 dark:text-zinc-900 font-bold text-3xl flex items-center justify-center select-none transition-colors duration-200 border-2 border-transparent relative">
@@ -101,30 +111,25 @@
                         </button>
                     </div>
 
+                    {{-- Username --}}
                     <div class="pb-4 border-b border-zinc-100 dark:border-zinc-800">
                         <label for="name" class="text-xs text-zinc-500 dark:text-zinc-400 block mb-1">Username</label>
                         <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" readonly required class="editable-field w-full bg-transparent border-none p-0 font-semibold text-zinc-900 dark:text-white text-base focus:ring-0 cursor-default">
-                        @error('name')
-                            <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
-                        @enderror
                     </div>
 
+                    {{-- Email --}}
                     <div class="pb-4 border-b border-zinc-100 dark:border-zinc-800">
                         <label for="email" class="text-xs text-zinc-500 dark:text-zinc-400 block mb-1">Email</label>
                         <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" readonly required class="editable-field w-full bg-transparent border-none p-0 font-semibold text-zinc-900 dark:text-white text-base focus:ring-0 cursor-default">
-                        @error('email')
-                            <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
-                        @enderror
                     </div>
 
+                    {{-- Bio --}}
                     <div>
                         <label for="bio" class="text-xs text-zinc-500 dark:text-zinc-400 block mb-1">Bio</label>
                         <textarea id="bio" name="bio" rows="2" readonly class="editable-field w-full bg-transparent border-none p-0 font-semibold text-zinc-900 dark:text-white text-base focus:ring-0 cursor-default resize-none">{{ old('bio', $user->bio) }}</textarea>
-                        @error('bio')
-                            <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
-                        @enderror
                     </div>
 
+                    {{-- Tombol Simpan Perubahan (Muncul rapi tanpa merusak tata letak) --}}
                     <div id="save-button-wrapper" class="hidden justify-end pt-2">
                         <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition cursor-pointer">
                             Simpan Perubahan
@@ -132,8 +137,9 @@
                     </div>
                 </form>
 
+                {{-- KOLOM 2: Info Role & Danger Zone --}}
                 <div class="space-y-6">
-
+                    {{-- Card Role & Join Date --}}
                     <div class="bg-white dark:bg-[#212529] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 space-y-4 transition-colors duration-200 shadow-sm">
                         <div>
                             <span class="text-xs text-zinc-500 dark:text-zinc-400 block mb-1">Role</span>
@@ -146,6 +152,7 @@
                         </div>
                     </div>
 
+                    {{-- Danger Zone --}}
                     <div class="bg-white dark:bg-[#212529] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 space-y-3 transition-colors duration-200 shadow-sm">
                         <h3 class="text-sm font-semibold text-zinc-900 dark:text-white mb-2">Danger Zone</h3>
 
@@ -161,13 +168,35 @@
                             </button>
                         </form>
                     </div>
+                </div>
 
+                {{-- KOLOM 3: Postingan Terpopuler (Top Likes) --}}
+                <div class="space-y-6">
+                    <div class="bg-white dark:bg-[#212529] p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 space-y-4 transition-colors duration-200 shadow-sm">
+                        <h3 class="text-sm font-semibold text-zinc-900 dark:text-white">Postingan Terpopuler (Top Likes)</h3>
+
+                        <div class="space-y-3">
+                            @forelse($topPosts ?? [] as $post)
+                                <div class="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200/60 dark:border-zinc-700/60 flex items-center justify-between gap-3">
+                                    <div class="overflow-hidden">
+                                        <p class="text-xs font-medium text-zinc-900 dark:text-white truncate">{{ $post->title ?? $post->content }}</p>
+                                        <span class="text-[10px] text-zinc-500 dark:text-zinc-400">❤️ {{ $post->likes_count ?? 0 }} Likes</span>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="p-6 text-center text-xs text-zinc-500 dark:text-zinc-400">
+                                    Belum ada postingan populer.
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </main>
     </div>
 
+    {{-- Modal Ubah Password --}}
     <div id="password-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
         <div class="flex items-center justify-center h-full p-4">
             <div class="bg-white dark:bg-[#212529] rounded-2xl max-w-md w-full p-6 border border-zinc-200 dark:border-zinc-800 shadow-2xl max-h-[90vh] overflow-y-auto">
@@ -225,6 +254,7 @@
         </div>
     </div>
 
+    {{-- Script Pendukung --}}
     <script>
         const editBtn = document.getElementById('edit-toggle-btn');
         const editableFields = document.querySelectorAll('.editable-field');
@@ -251,51 +281,75 @@
             });
 
             if (isEditing) {
-                avatarInput.removeAttribute('disabled');
-                avatarOverlay.classList.remove('hidden');
-                avatarOverlay.classList.add('flex');
-                saveBtnWrapper.classList.remove('hidden');
-                saveBtnWrapper.classList.add('flex');
-                document.getElementById('name').focus();
+                if (avatarInput) avatarInput.removeAttribute('disabled');
+                if (avatarOverlay) {
+                    avatarOverlay.classList.remove('hidden');
+                    avatarOverlay.classList.add('flex');
+                }
+                if (saveBtnWrapper) {
+                    saveBtnWrapper.classList.remove('hidden');
+                    saveBtnWrapper.classList.add('flex');
+                }
+                const nameInput = document.getElementById('name');
+                if (nameInput) nameInput.focus();
             } else {
-                avatarInput.setAttribute('disabled', 'disabled');
-                avatarOverlay.classList.add('hidden');
-                avatarOverlay.classList.remove('flex');
-                saveBtnWrapper.classList.add('hidden');
-                saveBtnWrapper.classList.remove('flex');
+                if (avatarInput) avatarInput.setAttribute('disabled', 'disabled');
+                if (avatarOverlay) {
+                    avatarOverlay.classList.add('hidden');
+                    avatarOverlay.classList.remove('flex');
+                }
+                if (saveBtnWrapper) {
+                    saveBtnWrapper.classList.add('hidden');
+                    saveBtnWrapper.classList.remove('flex');
+                }
             }
         }
 
-        editBtn.addEventListener('click', toggleEditMode);
+        if (editBtn) {
+            editBtn.addEventListener('click', toggleEditMode);
+        }
 
-        avatarInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    avatarPreview.src = e.target.result;
-                    avatarPreview.classList.remove('hidden');
-                    if (avatarInitial) {
-                        avatarInitial.classList.add('hidden');
-                    }
+        if (avatarInput) {
+            avatarInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        if (avatarPreview) {
+                            avatarPreview.src = event.target.result;
+                            avatarPreview.classList.remove('hidden');
+                        }
+                        if (avatarInitial) {
+                            avatarInitial.classList.add('hidden');
+                        }
+                    };
+                    reader.readAsDataURL(file);
                 }
-                reader.readAsDataURL(file);
-            }
-        });
+            });
+        }
 
         function openPasswordModal() {
-            document.getElementById('password-modal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+            const modal = document.getElementById('password-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
         }
 
         function closePasswordModal() {
-            document.getElementById('password-modal').classList.add('hidden');
-            document.body.style.overflow = '';
+            const modal = document.getElementById('password-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
         }
 
-        document.getElementById('password-modal').addEventListener('click', function(e) {
-            if (e.target === this) closePasswordModal();
-        });
+        const passwordModal = document.getElementById('password-modal');
+        if (passwordModal) {
+            passwordModal.addEventListener('click', function(e) {
+                if (e.target === this) closePasswordModal();
+            });
+        }
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closePasswordModal();
@@ -309,28 +363,25 @@
             toggleEditMode();
         @endif
 
-        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
         const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
 
-        if (document.documentElement.classList.contains('dark')) {
-            themeToggleLightIcon.classList.remove('hidden');
-        } else {
-            themeToggleDarkIcon.classList.remove('hidden');
+        function updateThemeIcons() {
+            const isDark = document.documentElement.classList.contains('dark');
+            themeToggleLightIcon.classList.toggle('hidden', !isDark);
+            themeToggleDarkIcon.classList.toggle('hidden', isDark);
         }
 
-        themeToggleBtn.addEventListener('click', function() {
-            themeToggleDarkIcon.classList.toggle('hidden');
-            themeToggleLightIcon.classList.toggle('hidden');
+        if (themeToggleBtn && themeToggleLightIcon && themeToggleDarkIcon) {
+            updateThemeIcons();
 
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
-        });
+            themeToggleBtn.addEventListener('click', function() {
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                updateThemeIcons();
+            });
+        }
     </script>
 </body>
 </html>

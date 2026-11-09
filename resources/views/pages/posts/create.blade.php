@@ -65,12 +65,12 @@
                 <form action="{{ route('pages.posts.store') }}" method="POST" enctype="multipart/form-data"
                       class="bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-zinc-800 p-8 rounded-2xl shadow-lg transition-colors duration-200">
                     @csrf
-                    
+
                     {{-- Input Judul --}}
                     <div class="mb-6">
                         <label class="block text-zinc-700 dark:text-zinc-300 font-medium mb-2">Judul</label>
                         <input type="text" name="title" value="{{ old('title') }}" required
-                               class="w-full bg-zinc-50 dark:bg-[#09090b] border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                               class="w-full bg-zinc-50 dark:bg-[#09090b] border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C5CE7] focus:border-transparent transition"
                                placeholder="Masukkan judul postingan...">
                     </div>
 
@@ -78,7 +78,7 @@
                     <div class="mb-6">
                         <label class="block text-zinc-700 dark:text-zinc-300 font-medium mb-2">Kategori</label>
                         <select name="category_id" required
-                                class="w-full bg-zinc-50 dark:bg-[#09090b] border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                                class="w-full bg-zinc-50 dark:bg-[#09090b] border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C5CE7] focus:border-transparent transition">
                             <option value="">-- Pilih Kategori --</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -92,7 +92,7 @@
                     <div class="mb-6">
                         <label class="block text-zinc-700 dark:text-zinc-300 font-medium mb-2">Konten</label>
                         <textarea name="content" rows="6" required
-                                  class="w-full bg-zinc-50 dark:bg-[#09090b] border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                  class="w-full bg-zinc-50 dark:bg-[#09090b] border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6C5CE7] focus:border-transparent transition"
                                   placeholder="Tulis isi postingan di sini...">{{ old('content') }}</textarea>
                     </div>
 
@@ -100,7 +100,7 @@
                     <div class="mb-6">
                         <label class="block text-zinc-700 dark:text-zinc-300 font-medium mb-2">Gambar (Opsional, bisa lebih dari 1)</label>
                         <input type="file" name="images[]" id="image-input" multiple accept="image/*"
-                               class="w-full bg-zinc-50 dark:bg-[#09090b] border border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 p-2 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-500/10 file:text-blue-600 dark:file:text-blue-400 hover:file:bg-blue-500/20 transition cursor-pointer">
+                               class="w-full bg-zinc-50 dark:bg-[#09090b] border border-zinc-300 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 p-2 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#3B3A82] file:text-[#6C5CE7] dark:file:text-white hover:file:bg-[#3B3A82] transition cursor-pointer">
                         <p class="text-xs text-zinc-500 mt-1">Gunakan tombol Ctrl / Cmd saat memilih file untuk memilih beberapa foto sekaligus.</p>
 
                         {{-- Container Preview Gambar --}}
@@ -108,7 +108,7 @@
                     </div>
 
                     {{-- Tombol Submit --}}
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-blue-500/20 transition duration-200 cursor-pointer">
+                    <button type="submit" class="w-full bg-[#6C5CE7] hover:bg-[#6C5CE7] text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-blue-500/20 transition duration-200 cursor-pointer">
                         Simpan Postingan
                     </button>
                 </form>
@@ -149,7 +149,7 @@
 
         imageInput.addEventListener('change', function() {
             previewContainer.innerHTML = '';
-            
+
             if (this.files && this.files.length > 0) {
                 previewContainer.classList.remove('hidden');
 

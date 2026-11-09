@@ -13,8 +13,20 @@ class ProfileController extends Controller
 {
     public function edit(Request $request)
     {
+        // Hanya mengambil data user yang login
+        $user = $request->user();
+
+        // Ambil 3 postingan user dengan like terbanyak (desc)
+        $topPosts = $user->posts()
+            ->withCount('likes')          // butuh relasi Post::likes()
+            ->orderByDesc('likes_count')
+            ->limit(3)
+            ->get();
+
+        // Mengirim data user & top posts ke file tampilan (profile.blade.php)
         return view('profile.profile', [
-            'user' => $request->user(),
+            'user'     => $user,
+            'topPosts' => $topPosts,
         ]);
     }
 
@@ -33,7 +45,6 @@ class ProfileController extends Controller
             if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
-
             $path = $request->file('avatar')->store('avatars', 'public');
             $user->avatar = $path;
         }
@@ -47,7 +58,6 @@ class ProfileController extends Controller
             'email' => $validated['email'],
             'bio'   => $validated['bio'] ?? null,
         ]);
-
         $user->save();
 
         return redirect()->route('profile.edit')->with('status', 'profile-updated');
@@ -76,9 +86,7 @@ class ProfileController extends Controller
         }
 
         Auth::logout();
-
         $user->delete();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

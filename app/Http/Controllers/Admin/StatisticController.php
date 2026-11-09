@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Activity;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
@@ -12,9 +11,6 @@ use Illuminate\View\View;
 
 class StatisticController extends Controller
 {
-    /**
-     * Halaman statistik.
-     */
     public function index(): View
     {
         $totalMembers    = User::count();
@@ -28,29 +24,32 @@ class StatisticController extends Controller
         ));
     }
 
-    /**
-     * Endpoint JSON untuk polling AJAX di halaman statistik.
-     */
     public function data(): JsonResponse
     {
+        $postsByHour = Post::whereDate('created_at', today())
+            ->selectRaw('HOUR(created_at) as hour, COUNT(*) as aggregate')
+            ->groupBy('hour')
+            ->pluck('aggregate', 'hour');
+
+        $chartData = [];
+        for ($hour = 0; $hour < 24; $hour++) {
+            $chartData[] = $postsByHour->get($hour, 0);
+        }
+
+        // TAMBAHAN PAGINATION: Menggunakan paginate(5) bukan take(5)
+        $topUsers = User::withCount(['posts as total_likes' => function ($query) {
+                $query->join('likes', 'posts.id', '=', 'likes.post_id');
+            }])
+            ->having('total_likes', '>', 0)
+            ->orderByDesc('total_likes')
+            ->paginate(5); // <-- Ubah ke paginate(5)
+
         return response()->json([
             'members'    => User::count(),
             'categories' => Category::count(),
             'posts'      => Post::count(),
-
-            'activities' => Activity::with('user')
-                ->latest()
-                ->take(20)
-                ->get()
-                ->map(fn ($a) => [
-                    'id'         => $a->id,
-                    'type'       => $a->type,
-                    'user'       => [
-                        'name'   => $a->user->name ?? 'User terhapus',
-                        'avatar' => $a->user->profile_photo_url ?? null,
-                    ],
-                    'created_at' => $a->created_at->format('Y-m-d H:i:s'),
-                ]),
+            'chartData'  => $chartData,
+            'topUsers'   => $topUsers, // Sekarang berisi objek paginator
         ]);
     }
 }
