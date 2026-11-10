@@ -110,6 +110,16 @@
 
                 <x-auth-session-status class="mb-4" :status="session('status')" />
 
+                {{-- NOTIFIKASI BANNED ATAU ERROR LOGIN LAINNYA --}}
+                @if ($errors->has('login'))
+                    <div class="mb-4 p-3 bg-red-500/10 border border-red-500/50 rounded-xl flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="text-red-400 text-sm font-semibold text-left">{{ $errors->first('login') }}</span>
+                    </div>
+                @endif
+
                 <form method="POST" action="{{ route('login') }}" class="space-y-4">
                     @csrf
 
@@ -117,7 +127,9 @@
                         <label for="login" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Email atau Username</label>
                         <input id="login" type="text" name="login" value="{{ old('login') }}" required autofocus placeholder="Email atau Username"
                             class="w-full px-4 py-3 bg-[#0b1120] text-white rounded-xl border border-slate-700/70 focus:outline-none focus:border-[#6C5CE7] focus:ring-1 focus:ring-[#6C5CE7] font-medium text-sm transition">
-                        <x-input-error :messages="$errors->get('login')" class="mt-1 text-red-400 text-xs" />
+
+                        {{-- Pesan error di bawah input (opsional, karena sudah ada kotak merah di atas) --}}
+                        {{-- <x-input-error :messages="$errors->get('login')" class="mt-1 text-red-400 text-xs" /> --}}
                     </div>
 
                     <div>
@@ -134,7 +146,7 @@
 
                     <div class="flex items-center justify-between">
                         <label for="remember_me" class="inline-flex items-center cursor-pointer">
-                            <input id="remember_me" type="checkbox" name="remember" value="1" class="rounded bg-[#0b1120] border-slate-700 text-[#6C5CE7] shadow-sm focus:ring-[#6C5CE7]" name="remember">
+                            <input id="remember_me" type="checkbox" name="remember" value="1" class="rounded bg-[#0b1120] border-slate-700 text-[#6C5CE7] shadow-sm focus:ring-[#6C5CE7]">
                             <span class="ms-2 text-xs text-slate-400">Ingat saya</span>
                         </label>
                     </div>
@@ -172,7 +184,7 @@
                 document.addEventListener('mousemove', (e) => {
                     mouseX = e.clientX;
                     mouseY = e.clientY;
-                    
+
                     if (cursor.style.opacity === '' || cursor.style.opacity === '0') {
                         cursor.style.opacity = '1';
                         trail.style.opacity = '0.6';

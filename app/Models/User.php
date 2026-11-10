@@ -21,7 +21,8 @@ class User extends Authenticatable
         'password',
         'role',
         'bio',
-        'avatar', // <- ditambahkan supaya upload avatar bisa disimpan
+        'avatar',
+        'is_suspended',
     ];
 
     /**

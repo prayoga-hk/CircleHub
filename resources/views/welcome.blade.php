@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
@@ -67,7 +66,6 @@
             outline-offset: 4px;
         }
 
-        /* ===== CUSTOM CURSOR ===== */
         @media (pointer: fine) {
             body, a, button, input, textarea, select, [role="button"] {
                 cursor: none !important;
@@ -127,7 +125,6 @@
             }
         }
 
-        /* ===== SPLASH SCREEN ===== */
         #splash-screen {
             position: fixed;
             inset: 0;
@@ -200,12 +197,10 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Header & Footer */
         header, footer {
             transition: background-color 0.15s ease, border-color 0.15s ease;
         }
 
-        /* Glass card */
         .glass-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -407,7 +402,15 @@
 
 <body class="min-h-screen antialiased">
 
-    <!-- SPLASH SCREEN -->
+    @if (session('error'))
+        <div class="fixed top-6 left-1/2 transform -translate-x-1/2 z-[10000000] bg-red-600 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 animate-bounce border border-red-500">
+            <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <span class="font-bold text-sm tracking-wide">{{ session('error') }}</span>
+        </div>
+    @endif
+
     <div id="splash-screen">
         <img src="https://cdn.phototourl.com/member/2026-10-08-0243e666-f2a5-4124-b999-48635e9aaff4.png" alt="Logo CircleHub" class="splash-logo">
         <h1 class="splash-title">Circle<span>Hub</span></h1>
@@ -699,7 +702,7 @@
     <footer class="border-t border-white/[0.07]" style="background: var(--surface);">
         <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-14 pb-7">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
-                
+
                 <div class="reveal">
                     <a href="#beranda" class="inline-flex items-center gap-2">
                         <img src="https://cdn.phototourl.com/member/2026-10-08-0243e666-f2a5-4124-b999-48635e9aaff4.png" alt="CircleHub" class="w-10 h-10 object-contain" loading="lazy">
@@ -755,14 +758,10 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            
-            // ==========================================
-            // 1. SPLASH SCREEN LOGIC
-            // ==========================================
+        (function() {
             const splash = document.getElementById('splash-screen');
             const progressBar = document.getElementById('splash-progress');
-            
+
             if (splash && progressBar) {
                 let progress = 0;
                 const interval = setInterval(() => {
@@ -770,18 +769,21 @@
                     if (progress >= 100) {
                         progress = 100;
                         clearInterval(interval);
-                        
                         setTimeout(() => {
                             splash.classList.add('hidden-splash');
                         }, 300);
                     }
                     progressBar.style.width = progress + '%';
                 }, 100);
-            }
 
-            // ==========================================
-            // 2. CUSTOM CURSOR LOGIC
-            // ==========================================
+                setTimeout(() => {
+                    if (splash) splash.classList.add('hidden-splash');
+                }, 2000);
+            }
+        })();
+
+        document.addEventListener('DOMContentLoaded', function () {
+
             const cursor = document.getElementById('custom-cursor');
             const trail = document.getElementById('custom-cursor-trail');
             const isFinePointer = window.matchMedia('(pointer: fine)').matches;
@@ -794,7 +796,7 @@
                 document.addEventListener('mousemove', (e) => {
                     mouseX = e.clientX;
                     mouseY = e.clientY;
-                    
+
                     if (cursor.style.opacity === '' || cursor.style.opacity === '0') {
                         cursor.style.opacity = '1';
                         trail.style.opacity = '0.6';
@@ -832,9 +834,6 @@
                 });
             }
 
-            // ==========================================
-            // 3. THEME TOGGLE LOGIC
-            // ==========================================
             const themeToggle = document.getElementById('theme-toggle');
             const themeIcon = document.getElementById('theme-icon');
             const htmlEl = document.documentElement;
@@ -853,16 +852,13 @@
                 themeToggle.addEventListener('click', function () {
                     const currentTheme = htmlEl.getAttribute('data-theme');
                     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                    
+
                     htmlEl.setAttribute('data-theme', newTheme);
                     localStorage.setItem('circlehub-theme', newTheme);
                     updateThemeIcon(newTheme);
                 });
             }
 
-            // ==========================================
-            // 4. MOBILE MENU
-            // ==========================================
             const button = document.getElementById('mobile-menu-button');
             const menu = document.getElementById('mobile-menu');
 
@@ -885,9 +881,6 @@
                 });
             }
 
-            // ==========================================
-            // 5. SCROLL REVEAL
-            // ==========================================
             const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom');
 
             if ('IntersectionObserver' in window) {
