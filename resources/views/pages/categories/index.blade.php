@@ -118,7 +118,7 @@
 
                                     <div class="min-w-0">
                                         <h3 class="font-bold text-lg text-zinc-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">{{ $cat->name }}</h3>
-                                        <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{{ $cat->posts_count ?? 0 }} Anggota</p>
+                                        <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{{ $cat->posts_count ?? 0 }} Postingan</p>
                                     </div>
                                 </div>
 
@@ -153,7 +153,7 @@
 
                                     <div class="min-w-0">
                                         <h3 class="font-bold text-base text-zinc-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">{{ $cat->name }}</h3>
-                                        <p class="text-xs text-zinc-500 dark:text-zinc-400">{{ $cat->posts_count ?? 0 }} Anggota</p>
+                                        <p class="text-xs text-zinc-500 dark:text-zinc-400">{{ $cat->posts_count ?? 0 }} Postingan</p>
                                     </div>
                                 </div>
 
